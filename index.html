@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#1a1a2e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Adaptadores">
+<title>Localizador de Adaptadores</title>
+<link rel="manifest" href="manifest.json">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0f0f1a;
+    --surface: #1a1a2e;
+    --surface2: #16213e;
+    --accent: #4f8ef7;
+    --accent2: #7c3aed;
+    --text: #f0f0ff;
+    --text2: #9999cc;
+    --border: rgba(255,255,255,0.08);
+    --green: #22c55e;
+    --radius: 12px;
+  }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding-bottom: 2rem;
+  }
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 1rem 1.25rem 0.75rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .header-top {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 0.75rem;
+  }
+  .logo {
+    width: 32px; height: 32px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+  }
+  h1 {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .subtitle { font-size: 11px; color: var(--text2); }
+
+  .search-wrap {
+    position: relative;
+  }
+  .search-wrap svg {
+    position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+    color: var(--text2); pointer-events: none;
+  }
+  #search {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 10px 12px 10px 38px;
+    font-size: 15px;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  #search:focus { border-color: var(--accent); }
+  #search::placeholder { color: var(--text2); }
+
+  .filters {
+    display: flex;
+    gap: 6px;
+    padding: 0.75rem 1.25rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .filters::-webkit-scrollbar { display: none; }
+  .filter-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 5px 14px;
+    font-size: 12px;
+    color: var(--text2);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .filter-btn.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+    font-weight: 500;
+  }
+
+  .stats {
+    display: flex;
+    gap: 10px;
+    padding: 0 1.25rem 0.5rem;
+  }
+  .stat {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 8px 14px;
+    font-size: 11px;
+    color: var(--text2);
+    flex: 1;
+    text-align: center;
+  }
+  .stat strong { display: block; font-size: 18px; color: var(--text); font-weight: 600; }
+
+  .results {
+    padding: 0 1.25rem;
+  }
+  .section-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text2);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 1rem 0 0.5rem;
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1rem;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+    -webkit-tap-highlight-color: transparent;
+    position: relative;
+    overflow: hidden;
+  }
+  .card:active { background: rgba(79,142,247,0.05); border-color: var(--accent); }
+  .card-icon {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    font-size: 16px;
+    font-weight: 700;
+  }
+  .row-A .card-icon { background: rgba(79,142,247,0.15); color: var(--accent); }
+  .row-B .card-icon { background: rgba(124,58,237,0.15); color: #a78bfa; }
+  .row-C .card-icon { background: rgba(34,197,94,0.15); color: var(--green); }
+  .card-info { flex: 1; min-width: 0; }
+  .card-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .card-sub {
+    font-size: 12px;
+    color: var(--text2);
+    margin-top: 2px;
+  }
+  .badge {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 20px;
+    flex-shrink: 0;
+    letter-spacing: 0.02em;
+  }
+  .row-A .badge { background: rgba(79,142,247,0.2); color: #93c5fd; }
+  .row-B .badge { background: rgba(124,58,237,0.2); color: #c4b5fd; }
+  .row-C .badge { background: rgba(34,197,94,0.2); color: #86efac; }
+
+  mark {
+    background: rgba(79,142,247,0.3);
+    color: var(--text);
+    border-radius: 2px;
+    padding: 0 1px;
+  }
+
+  .empty {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--text2);
+  }
+  .empty .icon { font-size: 40px; margin-bottom: 0.75rem; }
+  .empty p { font-size: 14px; }
+
+  .detail-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 200;
+    align-items: flex-end;
+    justify-content: center;
+  }
+  .detail-overlay.open { display: flex; }
+  .detail-sheet {
+    background: var(--surface);
+    border-radius: 20px 20px 0 0;
+    padding: 1.5rem 1.5rem 2rem;
+    width: 100%;
+    max-width: 480px;
+    animation: slideUp 0.2s ease;
+  }
+  @keyframes slideUp {
+    from { transform: translateY(40px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+  .detail-handle {
+    width: 40px; height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    margin: 0 auto 1.25rem;
+  }
+  .detail-loc {
+    font-size: 48px;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .detail-name {
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 1rem;
+  }
+  .detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+  .detail-row:last-child { border-bottom: none; }
+  .detail-label { color: var(--text2); }
+  .detail-val { font-weight: 500; color: var(--text); }
+  .close-btn {
+    width: 100%;
+    margin-top: 1.25rem;
+    padding: 13px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text2);
+    font-size: 14px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .close-btn:active { background: var(--border); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-top">
+    <div class="logo">📦</div>
+    <div>
+      <h1>Localizador de Adaptadores</h1>
+      <div class="subtitle">Pesquisa em armazém</div>
+    </div>
+  </div>
+  <div class="search-wrap">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+    <input type="search" id="search" placeholder="Pesquisar adaptador ou localização..." autocomplete="off" autocorrect="off" spellcheck="false">
+  </div>
+</header>
+
+<div class="filters" id="filters">
+  <button class="filter-btn active" data-filter="all">Todos</button>
+  <button class="filter-btn" data-filter="A">Fila A</button>
+  <button class="filter-btn" data-filter="B">Fila B</button>
+  <button class="filter-btn" data-filter="C">Fila C</button>
+  <button class="filter-btn" data-filter="T">Atrás (T)</button>
+  <button class="filter-btn" data-filter="F">Frente (F)</button>
+</div>
+
+<div class="stats">
+  <div class="stat"><strong id="stat-total">0</strong>itens</div>
+  <div class="stat"><strong id="stat-shown">0</strong>visíveis</div>
+  <div class="stat"><strong id="stat-locs">0</strong>locais</div>
+</div>
+
+<div class="results" id="results"></div>
+
+<div class="detail-overlay" id="overlay">
+  <div class="detail-sheet" id="sheet">
+    <div class="detail-handle"></div>
+    <div class="detail-loc" id="d-loc"></div>
+    <div class="detail-name" id="d-name"></div>
+    <div id="d-details"></div>
+    <button class="close-btn" id="close-btn">Fechar</button>
+  </div>
+</div>
+
+<script>
+const DATA = [
+  {nome:"SA050005",index:"AT-01"},
+  {nome:"SA030005",index:"AT-01"},
+  {nome:"SA030004",index:"AT-01"},
+  {nome:"SNMP",index:"AT-01"},
+  {nome:"MAP10002",index:"AT-01"},
+  {nome:"Programadores",index:"AF-01"},
+  {nome:"Cabos osciloscopio",index:"AF-01"},
+  {nome:"Cabos USB",index:"AF-01"},
+  {nome:"Conversores RS232",index:"AF-01"},
+  {nome:"MAP8100 V2",index:"AT-02"},
+  {nome:"MAP8100 V2",index:"AF-02"},
+  {nome:"D050",index:"AT-03"},
+  {nome:"MMC",index:"AT-03"},
+  {nome:"MAP8014",index:"AT-04"},
+  {nome:"MAP8100-01",index:"AT-04"},
+  {nome:"MAP8014-01",index:"AT-04"},
+  {nome:"SA950009",index:"AF-04"},
+  {nome:"PS010007",index:"AF-04"},
+  {nome:"SA1100000",index:"AF-04"},
+  {nome:"SA000010",index:"AF-04"},
+  {nome:"SA140001",index:"AF-04"},
+  {nome:"SA960000",index:"AF-04"},
+  {nome:"RCU220",index:"AT-05"},
+  {nome:"TPU 220-1",index:"AT-05"},
+  {nome:"MAP3020",index:"AF-05"},
+  {nome:"G-Fault",index:"AF-05"},
+  {nome:"MAP3081",index:"AF-05"},
+  {nome:"MAP3080",index:"AF-05"},
+  {nome:"MAP3050",index:"AF-05"},
+  {nome:"MiniPSM-2",index:"AT-06"},
+  {nome:"PS000017",index:"AT-06"},
+  {nome:"Bar SOM-MX7",index:"AT-06"},
+  {nome:"MAP8061",index:"BT-01"},
+  {nome:"MAP8021",index:"BF-01"},
+  {nome:"SA070004 OP1/OP2",index:"BF-01"},
+  {nome:"SA000011",index:"BF-01"},
+  {nome:"MAP8100_01",index:"BF-01"},
+  {nome:"MAP8161",index:"BF-01"},
+  {nome:"MAP8051",index:"BF-01"},
+  {nome:"MAP8050",index:"BF-01"},
+  {nome:"MAP8100_02/04/05/06",index:"BT-02"},
+  {nome:"Micro-URR",index:"BF-02"},
+  {nome:"MAP8012",index:"BF-02"},
+  {nome:"MAP8011",index:"BF-02"},
+  {nome:"MAP8010",index:"BF-02"},
+  {nome:"ATE-BCU",index:"BT-03"},
+  {nome:"MCU500-2 equipamento",index:"BF-03"},
+  {nome:"DCU500H",index:"BT-04"},
+  {nome:"UC500E-1",index:"BF-04"},
+  {nome:"UC500E-2",index:"BF-04"},
+  {nome:"UC500E-3",index:"BF-04"},
+  {nome:"MAP8030",index:"BT-05"},
+  {nome:"MAP8110",index:"BT-05"},
+  {nome:"MAP8081 OP1 - OP2",index:"BT-05"},
+  {nome:"MAP8080",index:"BT-05"},
+  {nome:"MAP8031",index:"BT-05"},
+  {nome:"MAP8020",index:"BF-05"},
+  {nome:"Adaptador generico 4VQ163003",index:"BF-05"},
+  {nome:"MAP8021 V1",index:"BF-05"},
+  {nome:"MAP3200",index:"BT-06"},
+  {nome:"MAP7360",index:"BT-06"},
+  {nome:"MAP7381",index:"BT-06"},
+  {nome:"MAP7330",index:"BT-06"},
+  {nome:"Painel CLP 500",index:"BF-06"},
+  {nome:"Modulos Voyant",index:"BF-06"},
+  {nome:"Estudo Pimenta",index:"BT-07"},
+  {nome:"Rack MAP8110",index:"BT-07"},
+  {nome:"Estudo Pimenta",index:"BF-07"},
+  {nome:"Celula 3 Mário Nogueira",index:"BT-08"},
+  {nome:"Celula 3 Mário Nogueira",index:"BF-08"},
+  {nome:"Cabos GPIB",index:"CT-01"},
+  {nome:"controladores fontes Delta",index:"CT-01"},
+  {nome:"tubo extrator",index:"CT-01"},
+  {nome:"Cabos mala Omicron",index:"CT-01"},
+  {nome:"APSM+",index:"CF-01"},
+  {nome:"Resostatos",index:"CT-02"},
+  {nome:"Berbequim",index:"CT-02"},
+  {nome:"Triplas",index:"CT-02"},
+  {nome:"Cabos de rede",index:"CT-02"},
+  {nome:"MAP8052",index:"CF-02"},
+  {nome:"MAP8081",index:"CF-02"},
+  {nome:"MCU500-2 teste cartas",index:"CT-03"},
+  {nome:"MAP8282",index:"CT-03"},
+  {nome:"MAP8261",index:"CT-03"},
+  {nome:"MAP8252",index:"CT-03"},
+  {nome:"MAP8251",index:"CT-03"},
+  {nome:"MAP8220",index:"CT-03"},
+  {nome:"MAP8210",index:"CT-03"},
+  {nome:"MAP8200",index:"CF-03"},
+  {nome:"MAP8291",index:"CF-03"},
+  {nome:"MAP8180",index:"CT-04"},
+  {nome:"MAP8082 (falta CPU)",index:"CT-04"},
+  {nome:"MAP8180",index:"CF-04"},
+  {nome:"MAP8082",index:"CF-04"},
+  {nome:"Sucata cartas diversas MAP30xx",index:"CT-05"},
+  {nome:"Cartas MAP8200 estudo",index:"CT-05"},
+  {nome:"Agulhas",index:"CT-05"},
+  {nome:"Mini-PSM, PSM",index:"CF-05"},
+  {nome:"Componentes SMD, THT",index:"CT-06"},
+  {nome:"Processador MAP80xx",index:"CT-06"},
+  {nome:"Material António",index:"CF-06"},
+  {nome:"Estudo Pimenta",index:"CT-07"},
+  {nome:"Estudo Pimenta",index:"CF-07"},
+  {nome:"Celula 3 Mário Nogueira",index:"CT-08"},
+  {nome:"Celula 3 Mário Nogueira",index:"CF-08"},
+];
+
+function parseIndex(idx) {
+  const row = idx[0];
+  const side = idx[1];
+  const num = parseInt(idx.slice(3));
+  return { row, side, num, sideLabel: side === 'T' ? 'Atrás' : 'Frente' };
+}
+
+let currentFilter = 'all';
+let currentQuery = '';
+let selectedItem = null;
+
+function highlight(text, query) {
+  if (!query) return text;
+  const re = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`, 'gi');
+  return text.replace(re, '<mark>$1</mark>');
+}
+
+function rowClass(row) {
+  return row === 'A' ? 'row-A' : row === 'B' ? 'row-B' : 'row-C';
+}
+
+function render() {
+  const q = currentQuery.trim().toLowerCase();
+  const f = currentFilter;
+
+  const filtered = DATA.filter(d => {
+    const p = parseIndex(d.index);
+    const matchFilter = f === 'all' ||
+      (f === 'A' && p.row === 'A') ||
+      (f === 'B' && p.row === 'B') ||
+      (f === 'C' && p.row === 'C') ||
+      (f === 'T' && p.side === 'T') ||
+      (f === 'F' && p.side === 'F');
+    if (!matchFilter) return false;
+    if (!q) return true;
+    return d.nome.toLowerCase().includes(q) || d.index.toLowerCase().includes(q);
+  });
+
+  const locs = new Set(filtered.map(d => d.index)).size;
+  document.getElementById('stat-total').textContent = DATA.length;
+  document.getElementById('stat-shown').textContent = filtered.length;
+  document.getElementById('stat-locs').textContent = locs;
+
+  const container = document.getElementById('results');
+  if (filtered.length === 0) {
+    container.innerHTML = `<div class="empty"><div class="icon">🔍</div><p>Nenhum resultado encontrado</p></div>`;
+    return;
+  }
+
+  // Group by location
+  const groups = {};
+  filtered.forEach(d => {
+    if (!groups[d.index]) groups[d.index] = [];
+    groups[d.index].push(d);
+  });
+
+  const sorted = Object.keys(groups).sort((a,b) => {
+    const pa = parseIndex(a), pb = parseIndex(b);
+    if (pa.row !== pb.row) return pa.row < pb.row ? -1 : 1;
+    if (pa.num !== pb.num) return pa.num - pb.num;
+    return pa.side < pb.side ? -1 : 1;
+  });
+
+  let html = '';
+  sorted.forEach(loc => {
+    const p = parseIndex(loc);
+    const rc = rowClass(p.row);
+    if (!q) {
+      html += `<div class="section-label">Fila ${p.row} · Posição ${p.num} · ${p.sideLabel}</div>`;
+    }
+    groups[loc].forEach(item => {
+      const hn = highlight(item.nome, currentQuery);
+      const hi = highlight(item.index, currentQuery);
+      html += `<div class="card ${rc}" data-nome="${item.nome}" data-index="${item.index}">
+        <div class="card-icon">${p.row}${p.num}</div>
+        <div class="card-info">
+          <div class="card-name">${hn}</div>
+          <div class="card-sub">Fila ${p.row} · Posição ${p.num} · ${p.sideLabel}</div>
+        </div>
+        <div class="badge">${hi}</div>
+      </div>`;
+    });
+  });
+
+  container.innerHTML = html;
+
+  container.querySelectorAll('.card').forEach(card => {
+    card.addEventListener('click', () => {
+      const nome = card.dataset.nome;
+      const index = card.dataset.index;
+      const p = parseIndex(index);
+      showDetail(nome, index, p);
+    });
+  });
+}
+
+function showDetail(nome, index, p) {
+  document.getElementById('d-loc').textContent = index;
+  document.getElementById('d-name').textContent = nome;
+  document.getElementById('d-details').innerHTML = `
+    <div class="detail-row"><span class="detail-label">Fila</span><span class="detail-val">${p.row}</span></div>
+    <div class="detail-row"><span class="detail-label">Posição</span><span class="detail-val">${p.num}</span></div>
+    <div class="detail-row"><span class="detail-label">Localização</span><span class="detail-val">${p.sideLabel}</span></div>
+    <div class="detail-row"><span class="detail-label">Código completo</span><span class="detail-val">${index}</span></div>
+  `;
+  document.getElementById('overlay').classList.add('open');
+}
+
+document.getElementById('close-btn').addEventListener('click', () => {
+  document.getElementById('overlay').classList.remove('open');
+});
+document.getElementById('overlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('overlay'))
+    document.getElementById('overlay').classList.remove('open');
+});
+
+document.getElementById('search').addEventListener('input', e => {
+  currentQuery = e.target.value;
+  render();
+});
+
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentFilter = btn.dataset.filter;
+    render();
+  });
+});
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(() => {});
+}
+
+render();
+</script>
+</body>
+</html>
