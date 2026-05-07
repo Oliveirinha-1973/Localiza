@@ -203,6 +203,24 @@
   .empty .icon { font-size: 40px; margin-bottom: 0.75rem; }
   .empty p { font-size: 14px; }
 
+  .map-section { padding: 0 1.25rem 0.5rem; }
+  .map-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 10px; }
+  .map-table { border-collapse: collapse; }
+  .map-table th { font-size: 9px; color: var(--text2); padding: 2px 3px; text-align: center; font-weight: 500; }
+  .map-row-label { font-size: 12px; font-weight: 600; padding: 3px 8px 3px 2px; text-align: right; }
+  .map-row-label.rA { color: #93c5fd; }
+  .map-row-label.rB { color: #c4b5fd; }
+  .map-row-label.rC { color: #86efac; }
+  .mcell { width: 26px; height: 26px; border: 1px solid var(--border); border-radius: 3px; text-align: center; vertical-align: middle; cursor: pointer; font-size: 9px; font-weight: 600; }
+  .mcell.rA.has-items { background: rgba(79,142,247,0.18); color: #93c5fd; border-color: rgba(79,142,247,0.4); }
+  .mcell.rB.has-items { background: rgba(124,58,237,0.18); color: #c4b5fd; border-color: rgba(124,58,237,0.4); }
+  .mcell.rC.has-items { background: rgba(34,197,94,0.18); color: #86efac; border-color: rgba(34,197,94,0.4); }
+  .mcell.lit { background: #facc15 !important; border-color: #eab308 !important; color: #422006 !important; animation: blink 0.6s ease-in-out infinite alternate; }
+  @keyframes blink { from { opacity:1; } to { opacity:0.3; } }
+  .map-legend { display: flex; gap: 10px; margin-top: 8px; flex-wrap: wrap; }
+  .map-leg { display: flex; align-items: center; gap: 4px; font-size: 10px; color: var(--text2); }
+  .map-leg-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+
   .detail-overlay {
     display: none;
     position: fixed; inset: 0;
@@ -299,6 +317,19 @@
   <div class="stat"><strong id="stat-total">0</strong>itens</div>
   <div class="stat"><strong id="stat-shown">0</strong>visíveis</div>
   <div class="stat"><strong id="stat-locs">0</strong>locais</div>
+</div>
+
+<div class="map-section">
+  <div class="section-label" style="padding-top:0.75rem;padding-bottom:0.5rem;">Mapa da estante</div>
+  <div class="map-wrap">
+    <div id="map-table-container"></div>
+    <div class="map-legend">
+      <div class="map-leg"><div class="map-leg-dot" style="background:rgba(79,142,247,0.18);border:1px solid rgba(79,142,247,0.4);"></div>Fila A</div>
+      <div class="map-leg"><div class="map-leg-dot" style="background:rgba(124,58,237,0.18);border:1px solid rgba(124,58,237,0.4);"></div>Fila B</div>
+      <div class="map-leg"><div class="map-leg-dot" style="background:rgba(34,197,94,0.18);border:1px solid rgba(34,197,94,0.4);"></div>Fila C</div>
+      <div class="map-leg"><div class="map-leg-dot" style="background:#facc15;border:1px solid #eab308;"></div>resultado</div>
+    </div>
+  </div>
 </div>
 
 <div class="results" id="results"></div>
@@ -541,6 +572,13 @@ document.getElementById('overlay').addEventListener('click', e => {
 document.getElementById('search').addEventListener('input', e => {
   currentQuery = e.target.value;
   render();
+  const q = e.target.value.trim().toLowerCase();
+  if (q) {
+    const hits = [...new Set(DATA.filter(d => d.nome.toLowerCase().includes(q)||d.index.toLowerCase().includes(q)).map(d=>d.index))];
+    highlightMap(hits);
+  } else {
+    highlightMap([]);
+  }
 });
 
 document.querySelectorAll('.filter-btn').forEach(btn => {
@@ -552,10 +590,58 @@ document.querySelectorAll('.filter-btn').forEach(btn => {
   });
 });
 
+const byLoc = {};
+DATA.forEach(d => { byLoc[d.index] = byLoc[d.index]||[]; byLoc[d.index].push(d.nome); });
+
+function buildMap() {
+  const ROWS = ['A','B','C'];
+  const COLS = [1,2,3,4,5,6,7,8];
+  const SIDES = ['F','T'];
+  let h = '<table class="map-table"><thead><tr><th></th>';
+  COLS.forEach(c => { h += `<th colspan="2">${c}</th>`; });
+  h += '</tr><tr><th></th>';
+  COLS.forEach(() => { h += '<th style="font-size:8px;color:var(--text2);">F</th><th style="font-size:8px;color:var(--text2);">T</th>'; });
+  h += '</tr></thead><tbody>';
+  ROWS.forEach(row => {
+    const rc = row === 'A' ? 'rA' : row === 'B' ? 'rB' : 'rC';
+    h += `<tr><td class="map-row-label ${rc}">${row}</td>`;
+    COLS.forEach(col => {
+      SIDES.forEach(side => {
+        const key = `${row}${side}-0${col}`;
+        const items = byLoc[key]||[];
+        const cls = items.length ? 'has-items' : '';
+        h += `<td class="mcell ${rc} ${cls}" id="mc-${key}" data-key="${key}">${items.length||''}</td>`;
+      });
+    });
+    h += '</tr>';
+  });
+  h += '</tbody></table>';
+  document.getElementById('map-table-container').innerHTML = h;
+  document.querySelectorAll('.mcell').forEach(cell => {
+    cell.addEventListener('click', () => {
+      const items = byLoc[cell.dataset.key];
+      if (items && items.length) {
+        document.getElementById('search').value = cell.dataset.key;
+        currentQuery = cell.dataset.key;
+        render();
+      }
+    });
+  });
+}
+
+function highlightMap(matchedIndexes) {
+  document.querySelectorAll('.mcell.lit').forEach(c => c.classList.remove('lit'));
+  matchedIndexes.forEach(idx => {
+    const el = document.getElementById('mc-'+idx);
+    if (el) el.classList.add('lit');
+  });
+}
+
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js').catch(() => {});
 }
 
+buildMap();
 render();
 </script>
 </body>
