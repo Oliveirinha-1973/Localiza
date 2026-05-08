@@ -1,4 +1,4 @@
-const CACHE = 'adaptadores-v1';
+const CACHE = 'adaptadores-v2';
 const ASSETS = ['./index.html', './manifest.json'];
 
 self.addEventListener('install', e => {
