@@ -224,13 +224,7 @@
       <div class="mgmt-title">Gestão de Itens</div>
       <div class="mgmt-subtitle" id="mgmt-count"></div>
     </div>
-    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
-      <button class="add-btn" id="btn-add">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
-        Adicionar
-      </button>
-      <button onclick="startChangePin()" style="font-size:11px;color:var(--text2);background:none;border:none;cursor:pointer;">🔑 Alterar PIN</button>
-    </div>
+    <button onclick="startChangePin()" style="font-size:12px;color:var(--text2);background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:8px 12px;cursor:pointer;">🔑 Alterar PIN</button>
   </div>
   <div class="mgmt-search-wrap">
     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
@@ -291,118 +285,29 @@
   </div>
 </div>
 
-<!-- FORM MODAL -->
-<div class="modal-overlay" id="modal">
-  <div class="modal-sheet">
-    <div class="modal-title" id="modal-title">Adicionar Item</div>
-    <div class="loc-preview" id="loc-preview">--</div>
-    <div class="form-group">
-      <label class="form-label">Nome do Adaptador</label>
-      <input type="text" class="form-input" id="f-nome" placeholder="ex: MAP8014" autocomplete="off" autocorrect="off">
-    </div>
-    <div class="form-row">
-      <div class="form-group">
-        <label class="form-label">Fila</label>
-        <select class="form-select" id="f-row"><option value="A">A</option><option value="B">B</option><option value="C">C</option></select>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Posição</label>
-        <select class="form-select" id="f-col">
-          <option value="01">1</option><option value="02">2</option><option value="03">3</option>
-          <option value="04">4</option><option value="05">5</option><option value="06">6</option>
-          <option value="07">7</option><option value="08">8</option><option value="09">9</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Lado</label>
-        <select class="form-select" id="f-side"><option value="F">Frente</option><option value="T">Atrás</option></select>
-      </div>
-    </div>
-    <div class="form-btns">
-      <button class="btn-cancel" id="modal-cancel">Cancelar</button>
-      <button class="btn-save" id="modal-save">Guardar</button>
-    </div>
-  </div>
-</div>
-
-<!-- CONFIRM -->
-<div class="confirm-overlay" id="confirm-overlay">
-  <div class="confirm-box">
-    <div class="confirm-title">⚠️ Remover item?</div>
-    <div class="confirm-msg" id="confirm-msg"></div>
-    <div class="confirm-btns">
-      <button class="btn-cc" id="confirm-cancel">Cancelar</button>
-      <button class="btn-co" id="confirm-ok">Remover</button>
-    </div>
-  </div>
-</div>
-
 <div class="toast" id="toast"></div>
 
 <script>
-const BASE_DATA = [
-  {nome:"SA050005",index:"AT-01"},{nome:"SA030005",index:"AT-01"},{nome:"SA030004",index:"AT-01"},
-  {nome:"SNMP",index:"AT-01"},{nome:"MAP10002",index:"AT-01"},
-  {nome:"Programadores",index:"AF-01"},{nome:"Cabos osciloscopio",index:"AF-01"},
-  {nome:"Cabos USB",index:"AF-01"},{nome:"Conversores RS232",index:"AF-01"},
-  {nome:"MAP8100 V2",index:"AT-02"},{nome:"MAP8100 V2",index:"AF-02"},
-  {nome:"D050",index:"AT-03"},{nome:"MMC",index:"AT-03"},
-  {nome:"MAP8014",index:"AT-04"},{nome:"MAP8100-01",index:"AT-04"},{nome:"MAP8014-01",index:"AT-04"},
-  {nome:"SA950009",index:"AF-04"},{nome:"PS010007",index:"AF-04"},{nome:"SA1100000",index:"AF-04"},
-  {nome:"SA000010",index:"AF-04"},{nome:"SA140001",index:"AF-04"},{nome:"SA960000",index:"AF-04"},
-  {nome:"RCU220",index:"AT-05"},{nome:"TPU 220-1",index:"AT-05"},
-  {nome:"MAP3020",index:"AF-05"},{nome:"G-Fault",index:"AF-05"},{nome:"MAP3081",index:"AF-05"},
-  {nome:"MAP3080",index:"AF-05"},{nome:"MAP3050",index:"AF-05"},
-  {nome:"MiniPSM-2",index:"AT-06"},{nome:"PS000017",index:"AT-06"},{nome:"Bar SOM-MX7",index:"AT-06"},
-  {nome:"MAP8061",index:"BT-01"},
-  {nome:"MAP8021",index:"BF-01"},{nome:"SA070004 OP1/OP2",index:"BF-01"},{nome:"SA000011",index:"BF-01"},
-  {nome:"MAP8100_01",index:"BF-01"},{nome:"MAP8161",index:"BF-01"},{nome:"MAP8051",index:"BF-01"},{nome:"MAP8050",index:"BF-01"},
-  {nome:"MAP8100_02/04/05/06",index:"BT-02"},
-  {nome:"Micro-URR",index:"BF-02"},{nome:"MAP8012",index:"BF-02"},{nome:"MAP8011",index:"BF-02"},{nome:"MAP8010",index:"BF-02"},
-  {nome:"ATE-BCU",index:"BT-03"},{nome:"MCU500-2 equipamento",index:"BF-03"},
-  {nome:"DCU500H",index:"BT-04"},
-  {nome:"UC500E-1",index:"BF-04"},{nome:"UC500E-2",index:"BF-04"},{nome:"UC500E-3",index:"BF-04"},
-  {nome:"MAP8030",index:"BT-05"},{nome:"MAP8110",index:"BT-05"},{nome:"MAP8081 OP1 - OP2",index:"BT-05"},
-  {nome:"MAP8080",index:"BT-05"},{nome:"MAP8031",index:"BT-05"},
-  {nome:"MAP8020",index:"BF-05"},{nome:"Adaptador generico 4VQ163003",index:"BF-05"},{nome:"MAP8021 V1",index:"BF-05"},
-  {nome:"MAP3200",index:"BT-06"},{nome:"MAP7360",index:"BT-06"},{nome:"MAP7381",index:"BT-06"},{nome:"MAP7330",index:"BT-06"},
-  {nome:"Painel CLP 500",index:"BF-06"},{nome:"Modulos Voyant",index:"BF-06"},
-  {nome:"Estudo Pimenta",index:"BT-07"},{nome:"Rack MAP8110",index:"BT-07"},
-  {nome:"Estudo Pimenta",index:"BF-07"},
-  {nome:"Celula 3 Mário Nogueira",index:"BT-08"},{nome:"Celula 3 Mário Nogueira",index:"BF-08"},
-  {nome:"Cabos GPIB",index:"CT-01"},{nome:"controladores fontes Delta",index:"CT-01"},
-  {nome:"tubo extrator",index:"CT-01"},{nome:"Cabos mala Omicron",index:"CT-01"},
-  {nome:"APSM+",index:"CF-01"},
-  {nome:"Resostatos",index:"CT-02"},{nome:"Berbequim",index:"CT-02"},{nome:"Triplas",index:"CT-02"},{nome:"Cabos de rede",index:"CT-02"},
-  {nome:"MAP8052",index:"CF-02"},{nome:"MAP8081",index:"CF-02"},
-  {nome:"MCU500-2 teste cartas",index:"CT-03"},{nome:"MAP8282",index:"CT-03"},{nome:"MAP8261",index:"CT-03"},
-  {nome:"MAP8252",index:"CT-03"},{nome:"MAP8251",index:"CT-03"},{nome:"MAP8220",index:"CT-03"},{nome:"MAP8210",index:"CT-03"},
-  {nome:"MAP8200",index:"CF-03"},{nome:"MAP8291",index:"CF-03"},
-  {nome:"MAP8180",index:"CT-04"},{nome:"MAP8082 (falta CPU)",index:"CT-04"},
-  {nome:"MAP8180",index:"CF-04"},{nome:"MAP8082",index:"CF-04"},
-  {nome:"Sucata cartas diversas MAP30xx",index:"CT-05"},{nome:"Cartas MAP8200 estudo",index:"CT-05"},{nome:"Agulhas",index:"CT-05"},
-  {nome:"Mini-PSM, PSM",index:"CF-05"},
-  {nome:"Componentes SMD, THT",index:"CT-06"},{nome:"Processador MAP80xx",index:"CT-06"},
-  {nome:"Material António",index:"CF-06"},
-  {nome:"Estudo Pimenta",index:"CT-07"},{nome:"Estudo Pimenta",index:"CF-07"},
-  {nome:"Celula 3 Mário Nogueira",index:"CT-08"},{nome:"Celula 3 Mário Nogueira",index:"CF-08"},
-];
+let BASE_DATA = [];
 
-// Storage
-function loadExtra() { try { return JSON.parse(localStorage.getItem('extra_items')||'[]'); } catch { return []; } }
-function saveExtra(a) { localStorage.setItem('extra_items', JSON.stringify(a)); }
-function loadDeleted() { try { return JSON.parse(localStorage.getItem('deleted_ids')||'[]'); } catch { return []; } }
-function saveDeleted(a) { localStorage.setItem('deleted_ids', JSON.stringify(a)); }
-
-let extraItems = loadExtra();
-let deletedIds = loadDeleted();
+// Carrega dados do data.json (partilhado no GitHub para todos)
+async function loadData() {
+  try {
+    const res = await fetch('data.json?v=' + Date.now());
+    BASE_DATA = await res.json();
+  } catch(e) {
+    console.warn('Erro a carregar data.json, a usar cache local', e);
+    BASE_DATA = JSON.parse(localStorage.getItem('data_cache') || '[]');
+  }
+  localStorage.setItem('data_cache', JSON.stringify(BASE_DATA));
+  rebuildMap();
+  render();
+}
 
 function getData() {
-  const base = BASE_DATA
-    .map((d,i) => ({...d, _id:'b'+i}))
-    .filter(d => !deletedIds.includes(d._id));
-  return [...base, ...extraItems.map(e => ({...e, _id:e.id}))];
+  return BASE_DATA.map((d,i) => ({...d, _id:'b'+i}));
 }
+
 
 // Utils
 function parseIndex(idx) {
@@ -540,7 +445,7 @@ function highlightMap(hits) {
   hits.forEach(idx=>{ const el=document.getElementById('mc-'+idx); if(el) el.classList.add('lit'); });
 }
 
-// ── GESTÃO ──
+// ── GESTÃO (só leitura — edição via data.json no GitHub) ──
 let mgmtQuery='';
 function renderMgmt() {
   const DATA=getData(), q=mgmtQuery.trim().toLowerCase();
@@ -557,93 +462,16 @@ function renderMgmt() {
   });
   list.innerHTML=sorted.map(item=>{
     const p=parseIndex(item.index), rc=mrowClass(p.row);
-    const isAdded=!!item.added;
-    const newB=isAdded?'<span class="new-badge">novo</span>':'';
     return `<div class="mgmt-card ${rc}">
       <div class="mgmt-card-icon">${p.row}${p.num}</div>
       <div class="mgmt-card-info">
-        <div class="mgmt-card-name">${hl(item.nome,mgmtQuery)}${newB}</div>
+        <div class="mgmt-card-name">${hl(item.nome,mgmtQuery)}</div>
         <div class="mgmt-card-loc">${item.index} · Fila ${p.row} · ${p.sideLabel}</div>
-      </div>
-      <div class="mgmt-actions">
-        ${isAdded?`<button class="icon-btn edit" data-id="${item.id}">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-        </button>`:''}
-        <button class="icon-btn del" data-id="${item._id}" data-nome="${item.nome.replace(/"/g,'&quot;')}" data-added="${isAdded}">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
-        </button>
       </div>
     </div>`;
   }).join('');
-  list.querySelectorAll('.icon-btn.edit').forEach(btn=>btn.addEventListener('click',()=>openEdit(btn.dataset.id)));
-  list.querySelectorAll('.icon-btn.del').forEach(btn=>btn.addEventListener('click',()=>confirmDelete(btn.dataset.id, btn.dataset.nome, btn.dataset.added==='true')));
 }
 document.getElementById('mgmt-search').addEventListener('input',e=>{ mgmtQuery=e.target.value; renderMgmt(); });
-
-// ── FORM ──
-let editingId=null;
-function updatePreview() {
-  const r=document.getElementById('f-row').value, s=document.getElementById('f-side').value, c=document.getElementById('f-col').value;
-  document.getElementById('loc-preview').textContent=`${r}${s}-${c}`;
-}
-['f-row','f-side','f-col'].forEach(id=>document.getElementById(id).addEventListener('change',updatePreview));
-
-function openAdd() {
-  editingId=null;
-  document.getElementById('modal-title').textContent='Adicionar Item';
-  document.getElementById('f-nome').value='';
-  document.getElementById('f-row').value='A';
-  document.getElementById('f-side').value='F';
-  document.getElementById('f-col').value='01';
-  updatePreview();
-  document.getElementById('modal').classList.add('open');
-  setTimeout(()=>document.getElementById('f-nome').focus(),300);
-}
-function openEdit(id) {
-  const item=extraItems.find(i=>i.id===id); if(!item) return;
-  editingId=id;
-  document.getElementById('modal-title').textContent='Editar Item';
-  document.getElementById('f-nome').value=item.nome;
-  const p=parseIndex(item.index);
-  document.getElementById('f-row').value=p.row;
-  document.getElementById('f-side').value=p.side;
-  document.getElementById('f-col').value=String(p.num).padStart(2,'0');
-  updatePreview();
-  document.getElementById('modal').classList.add('open');
-}
-function closeModal() { document.getElementById('modal').classList.remove('open'); editingId=null; }
-document.getElementById('btn-add').addEventListener('click',openAdd);
-document.getElementById('modal-cancel').addEventListener('click',closeModal);
-document.getElementById('modal-save').addEventListener('click',()=>{
-  const nome=document.getElementById('f-nome').value.trim();
-  if (!nome) { toast('⚠️ Introduz o nome do adaptador'); return; }
-  const row=document.getElementById('f-row').value, side=document.getElementById('f-side').value, col=document.getElementById('f-col').value;
-  const index=`${row}${side}-${col}`;
-  if (editingId) {
-    const i=extraItems.findIndex(x=>x.id===editingId);
-    if(i>=0){ extraItems[i].nome=nome; extraItems[i].index=index; }
-    toast('✅ Item atualizado');
-  } else {
-    extraItems.push({id:'e'+Date.now(), nome, index, added:true});
-    toast('✅ Item adicionado');
-  }
-  saveExtra(extraItems); closeModal(); renderMgmt(); render();
-});
-
-// ── DELETE ──
-let pendingId=null, pendingAdded=false;
-function confirmDelete(id,nome,isAdded) {
-  pendingId=id; pendingAdded=isAdded;
-  document.getElementById('confirm-msg').textContent=`"${nome}" será removido da lista.`;
-  document.getElementById('confirm-overlay').classList.add('open');
-}
-document.getElementById('confirm-cancel').addEventListener('click',()=>document.getElementById('confirm-overlay').classList.remove('open'));
-document.getElementById('confirm-ok').addEventListener('click',()=>{
-  document.getElementById('confirm-overlay').classList.remove('open');
-  if (pendingAdded) { extraItems=extraItems.filter(i=>i.id!==pendingId); saveExtra(extraItems); }
-  else { deletedIds.push(pendingId); saveDeleted(deletedIds); }
-  toast('🗑️ Item removido'); renderMgmt(); render();
-});
 
 // ── PIN ──
 const DEFAULT_PIN = '1234';
@@ -651,7 +479,7 @@ function getPin() { return localStorage.getItem('mgmt_pin') || DEFAULT_PIN; }
 function savePin(p) { localStorage.setItem('mgmt_pin', p); }
 
 let pinBuffer = '';
-let pinMode = 'verify'; // 'verify' | 'new1' | 'new2'
+let pinMode = 'verify';
 let pinNew1 = '';
 let mgmtUnlocked = false;
 
@@ -659,7 +487,6 @@ function openPinOverlay(mode) {
   pinMode = mode || 'verify';
   pinBuffer = ''; pinNew1 = '';
   document.getElementById('pin-error').textContent = '';
-  document.getElementById('pin-cancel-btn').style.display = mode === 'verify' ? 'block' : 'block';
   if (mode === 'new1') {
     document.getElementById('pin-title').textContent = 'Novo PIN';
     document.getElementById('pin-sub').textContent = 'Escolhe um PIN de 4 dígitos';
@@ -673,10 +500,7 @@ function openPinOverlay(mode) {
   updatePinDots();
   document.getElementById('pin-overlay').classList.add('open');
 }
-function closePinOverlay() {
-  document.getElementById('pin-overlay').classList.remove('open');
-  pinBuffer = '';
-}
+function closePinOverlay() { document.getElementById('pin-overlay').classList.remove('open'); pinBuffer = ''; }
 
 function updatePinDots(state) {
   for (let i = 0; i < 4; i++) {
@@ -686,73 +510,55 @@ function updatePinDots(state) {
     else if (i < pinBuffer.length) dot.classList.add('filled');
   }
 }
-
 function pinKey(digit) {
   if (pinBuffer.length >= 4) return;
-  pinBuffer += digit;
-  updatePinDots();
+  pinBuffer += digit; updatePinDots();
   if (pinBuffer.length === 4) setTimeout(checkPin, 120);
 }
-function pinDel() {
-  pinBuffer = pinBuffer.slice(0, -1);
-  updatePinDots();
-  document.getElementById('pin-error').textContent = '';
-}
+function pinDel() { pinBuffer = pinBuffer.slice(0,-1); updatePinDots(); document.getElementById('pin-error').textContent=''; }
 
 function checkPin() {
   if (pinMode === 'verify') {
     if (pinBuffer === getPin()) {
-      closePinOverlay();
-      mgmtUnlocked = true;
-      // actually switch page
-      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+      closePinOverlay(); mgmtUnlocked = true;
+      document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
       document.getElementById('page-mgmt').classList.add('active');
       document.getElementById('nav-mgmt').classList.add('active');
-      document.getElementById('search-wrap').style.display = 'none';
+      document.getElementById('search-wrap').style.display='none';
       renderMgmt();
     } else {
       updatePinDots('error');
-      document.getElementById('pin-error').textContent = 'PIN incorreto. Tenta novamente.';
-      setTimeout(() => { pinBuffer = ''; updatePinDots(); document.getElementById('pin-error').textContent = ''; }, 900);
+      document.getElementById('pin-error').textContent='PIN incorreto. Tenta novamente.';
+      setTimeout(()=>{ pinBuffer=''; updatePinDots(); document.getElementById('pin-error').textContent=''; }, 900);
     }
   } else if (pinMode === 'new1') {
-    pinNew1 = pinBuffer;
-    pinBuffer = '';
-    openPinOverlay('new2');
+    pinNew1=pinBuffer; pinBuffer=''; openPinOverlay('new2');
   } else if (pinMode === 'new2') {
-    if (pinBuffer === pinNew1) {
-      savePin(pinBuffer);
-      closePinOverlay();
-      toast('🔑 PIN alterado com sucesso!');
-    } else {
+    if (pinBuffer === pinNew1) { savePin(pinBuffer); closePinOverlay(); toast('🔑 PIN alterado com sucesso!'); }
+    else {
       updatePinDots('error');
-      document.getElementById('pin-error').textContent = 'PINs não coincidem. Tenta novamente.';
-      setTimeout(() => { pinBuffer = ''; pinNew1 = ''; openPinOverlay('new1'); }, 900);
+      document.getElementById('pin-error').textContent='PINs não coincidem. Tenta novamente.';
+      setTimeout(()=>{ pinBuffer=''; pinNew1=''; openPinOverlay('new1'); }, 900);
     }
   }
 }
-
 function startChangePin() { openPinOverlay('new1'); }
 
-// Override switchPage to require PIN for mgmt
 function switchPage(page) {
-  if (page === 'mgmt' && !mgmtUnlocked) {
-    openPinOverlay('verify');
-    return;
-  }
-  if (page === 'search') mgmtUnlocked = false; // lock again when leaving
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('page-' + page).classList.add('active');
-  document.getElementById('nav-' + page).classList.add('active');
-  document.getElementById('search-wrap').style.display = page === 'mgmt' ? 'none' : 'block';
-  if (page === 'mgmt') renderMgmt();
+  if (page==='mgmt' && !mgmtUnlocked) { openPinOverlay('verify'); return; }
+  if (page==='search') mgmtUnlocked=false;
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+page).classList.add('active');
+  document.getElementById('nav-'+page).classList.add('active');
+  document.getElementById('search-wrap').style.display=page==='mgmt'?'none':'block';
+  if (page==='mgmt') renderMgmt();
 }
 
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
-rebuildMap();
-render();
+loadData();
+
 </script>
 </body>
 </html>
