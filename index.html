@@ -12,206 +12,69 @@
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
-    --bg: #0f0f1a;
-    --surface: #1a1a2e;
-    --surface2: #16213e;
-    --accent: #4f8ef7;
-    --accent2: #7c3aed;
-    --text: #f0f0ff;
-    --text2: #9999cc;
-    --border: rgba(255,255,255,0.08);
-    --green: #22c55e;
-    --radius: 12px;
+    --bg: #0f0f1a; --surface: #1a1a2e; --surface2: #16213e;
+    --accent: #4f8ef7; --accent2: #7c3aed; --text: #f0f0ff;
+    --text2: #9999cc; --border: rgba(255,255,255,0.08);
+    --green: #22c55e; --red: #ef4444; --radius: 12px;
   }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    padding-bottom: 2rem;
-  }
-  header {
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    padding: 1rem 1.25rem 0.75rem;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-  }
-  .header-top {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 0.75rem;
-  }
-  .logo {
-    width: 32px; height: 32px;
-    background: linear-gradient(135deg, var(--accent), var(--accent2));
-    border-radius: 8px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 16px;
-  }
-  h1 {
-    font-size: 17px;
-    font-weight: 600;
-    color: var(--text);
-  }
-  .subtitle { font-size: 11px; color: var(--text2); }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding-bottom: 70px; }
 
-  .search-wrap {
-    position: relative;
-  }
-  .search-wrap svg {
-    position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
-    color: var(--text2); pointer-events: none;
-  }
-  #search {
-    width: 100%;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 10px 12px 10px 38px;
-    font-size: 15px;
-    color: var(--text);
-    outline: none;
-    transition: border-color 0.2s;
-  }
+  header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 1rem 1.25rem 0.75rem; position: sticky; top: 0; z-index: 100; }
+  .header-top { display: flex; align-items: center; gap: 10px; margin-bottom: 0.75rem; }
+  .logo { width: 32px; height: 32px; background: linear-gradient(135deg, var(--accent), var(--accent2)); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+  h1 { font-size: 17px; font-weight: 600; }
+  .subtitle { font-size: 11px; color: var(--text2); }
+  .search-wrap { position: relative; }
+  .search-wrap svg { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text2); pointer-events: none; }
+  #search { width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 12px 10px 38px; font-size: 15px; color: var(--text); outline: none; transition: border-color 0.2s; }
   #search:focus { border-color: var(--accent); }
   #search::placeholder { color: var(--text2); }
 
-  .filters {
-    display: flex;
-    gap: 6px;
-    padding: 0.75rem 1.25rem;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-  }
-  .filters::-webkit-scrollbar { display: none; }
-  .filter-btn {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 5px 14px;
-    font-size: 12px;
-    color: var(--text2);
-    cursor: pointer;
-    white-space: nowrap;
-    transition: all 0.15s;
-    -webkit-tap-highlight-color: transparent;
-  }
-  .filter-btn.active {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: white;
-    font-weight: 500;
-  }
+  .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--surface); border-top: 1px solid var(--border); display: flex; z-index: 200; }
+  .nav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 8px 0 10px; gap: 3px; cursor: pointer; background: none; border: none; color: var(--text2); font-size: 10px; font-weight: 500; -webkit-tap-highlight-color: transparent; transition: color 0.15s; }
+  .nav-btn svg { width: 22px; height: 22px; }
+  .nav-btn.active { color: var(--accent); }
 
-  .stats {
-    display: flex;
-    gap: 10px;
-    padding: 0 1.25rem 0.5rem;
-  }
-  .stat {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 8px 14px;
-    font-size: 11px;
-    color: var(--text2);
-    flex: 1;
-    text-align: center;
-  }
+  .page { display: none; }
+  .page.active { display: block; }
+
+  .filters { display: flex; gap: 6px; padding: 0.75rem 1.25rem; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  .filters::-webkit-scrollbar { display: none; }
+  .filter-btn { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 5px 14px; font-size: 12px; color: var(--text2); cursor: pointer; white-space: nowrap; transition: all 0.15s; -webkit-tap-highlight-color: transparent; }
+  .filter-btn.active { background: var(--accent); border-color: var(--accent); color: white; font-weight: 500; }
+
+  .stats { display: flex; gap: 10px; padding: 0 1.25rem 0.5rem; }
+  .stat { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 8px 14px; font-size: 11px; color: var(--text2); flex: 1; text-align: center; }
   .stat strong { display: block; font-size: 18px; color: var(--text); font-weight: 600; }
 
-  .results {
-    padding: 0 1.25rem;
-  }
-  .section-label {
-    font-size: 11px;
-    font-weight: 600;
-    color: var(--text2);
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    padding: 1rem 0 0.5rem;
-  }
-  .card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 1rem;
-    margin-bottom: 8px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    cursor: pointer;
-    transition: border-color 0.15s, background 0.15s;
-    -webkit-tap-highlight-color: transparent;
-    position: relative;
-    overflow: hidden;
-  }
+  .results { padding: 0 1.25rem; }
+  .section-label { font-size: 11px; font-weight: 600; color: var(--text2); letter-spacing: 0.06em; text-transform: uppercase; padding: 1rem 0 0.5rem; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; margin-bottom: 8px; display: flex; align-items: center; gap: 12px; cursor: pointer; transition: border-color 0.15s, background 0.15s; -webkit-tap-highlight-color: transparent; }
   .card:active { background: rgba(79,142,247,0.05); border-color: var(--accent); }
-  .card-icon {
-    width: 40px; height: 40px;
-    border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-    font-size: 16px;
-    font-weight: 700;
-  }
+  .card-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 16px; font-weight: 700; }
   .row-A .card-icon { background: rgba(79,142,247,0.15); color: var(--accent); }
   .row-B .card-icon { background: rgba(124,58,237,0.15); color: #a78bfa; }
   .row-C .card-icon { background: rgba(34,197,94,0.15); color: var(--green); }
   .card-info { flex: 1; min-width: 0; }
-  .card-name {
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--text);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .card-sub {
-    font-size: 12px;
-    color: var(--text2);
-    margin-top: 2px;
-  }
-  .badge {
-    font-size: 11px;
-    font-weight: 600;
-    padding: 4px 10px;
-    border-radius: 20px;
-    flex-shrink: 0;
-    letter-spacing: 0.02em;
-  }
+  .card-name { font-size: 14px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .card-sub { font-size: 12px; color: var(--text2); margin-top: 2px; }
+  .badge { font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 20px; flex-shrink: 0; }
   .row-A .badge { background: rgba(79,142,247,0.2); color: #93c5fd; }
   .row-B .badge { background: rgba(124,58,237,0.2); color: #c4b5fd; }
   .row-C .badge { background: rgba(34,197,94,0.2); color: #86efac; }
-
-  mark {
-    background: rgba(79,142,247,0.3);
-    color: var(--text);
-    border-radius: 2px;
-    padding: 0 1px;
-  }
-
-  .empty {
-    text-align: center;
-    padding: 3rem 1rem;
-    color: var(--text2);
-  }
+  mark { background: rgba(79,142,247,0.3); color: var(--text); border-radius: 2px; padding: 0 1px; }
+  .empty { text-align: center; padding: 3rem 1rem; color: var(--text2); }
   .empty .icon { font-size: 40px; margin-bottom: 0.75rem; }
   .empty p { font-size: 14px; }
+  .new-badge { font-size: 9px; background: rgba(34,197,94,0.2); color: #86efac; border-radius: 4px; padding: 1px 5px; margin-left: 4px; vertical-align: middle; }
 
   .map-section { padding: 0 1.25rem 0.5rem; }
   .map-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 10px; }
   .map-table { border-collapse: collapse; }
   .map-table th { font-size: 11px; color: var(--text2); padding: 3px 4px; text-align: center; font-weight: 500; }
-  .map-table th.col-num { font-size: 14px; font-weight: 700; color: var(--text); letter-spacing: 0.02em; }
+  .map-table th.col-num { font-size: 14px; font-weight: 700; color: var(--text); }
   .map-row-label { font-size: 15px; font-weight: 700; padding: 3px 10px 3px 2px; text-align: right; }
-  .map-row-label.rA { color: #93c5fd; }
-  .map-row-label.rB { color: #c4b5fd; }
-  .map-row-label.rC { color: #86efac; }
+  .map-row-label.rA { color: #93c5fd; } .map-row-label.rB { color: #c4b5fd; } .map-row-label.rC { color: #86efac; }
   .mcell { width: 46px; height: 46px; border: 1px solid var(--border); border-radius: 4px; text-align: center; vertical-align: middle; cursor: pointer; font-size: 13px; font-weight: 600; }
   .mcell.rA.has-items { background: rgba(79,142,247,0.18); color: #93c5fd; border-color: rgba(79,142,247,0.4); }
   .mcell.rB.has-items { background: rgba(124,58,237,0.18); color: #c4b5fd; border-color: rgba(124,58,237,0.4); }
@@ -222,121 +85,204 @@
   .map-leg { display: flex; align-items: center; gap: 4px; font-size: 10px; color: var(--text2); }
   .map-leg-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
 
-  .detail-overlay {
-    display: none;
-    position: fixed; inset: 0;
-    background: rgba(0,0,0,0.6);
-    z-index: 200;
-    align-items: flex-end;
-    justify-content: center;
-  }
+  .detail-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 300; align-items: flex-end; justify-content: center; }
   .detail-overlay.open { display: flex; }
-  .detail-sheet {
-    background: var(--surface);
-    border-radius: 20px 20px 0 0;
-    padding: 1.5rem 1.5rem 2rem;
-    width: 100%;
-    max-width: 480px;
-    animation: slideUp 0.2s ease;
-  }
-  @keyframes slideUp {
-    from { transform: translateY(40px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
-  }
-  .detail-handle {
-    width: 40px; height: 4px;
-    background: var(--border);
-    border-radius: 2px;
-    margin: 0 auto 1.25rem;
-  }
-  .detail-loc {
-    font-size: 48px;
-    font-weight: 700;
-    margin-bottom: 0.25rem;
-    background: linear-gradient(135deg, var(--accent), var(--accent2));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-  .detail-name {
-    font-size: 18px;
-    font-weight: 500;
-    margin-bottom: 1rem;
-  }
-  .detail-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 0;
-    border-bottom: 1px solid var(--border);
-    font-size: 13px;
-  }
+  .detail-sheet { background: var(--surface); border-radius: 20px 20px 0 0; padding: 1.5rem 1.5rem 2rem; width: 100%; max-width: 480px; animation: slideUp 0.2s ease; }
+  @keyframes slideUp { from { transform: translateY(40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+  .detail-handle { width: 40px; height: 4px; background: var(--border); border-radius: 2px; margin: 0 auto 1.25rem; }
+  .detail-loc { font-size: 48px; font-weight: 700; margin-bottom: 0.25rem; background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .detail-name { font-size: 18px; font-weight: 500; margin-bottom: 1rem; }
+  .detail-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
   .detail-row:last-child { border-bottom: none; }
   .detail-label { color: var(--text2); }
-  .detail-val { font-weight: 500; color: var(--text); }
-  .close-btn {
-    width: 100%;
-    margin-top: 1.25rem;
-    padding: 13px;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    color: var(--text2);
-    font-size: 14px;
-    cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
-  }
-  .close-btn:active { background: var(--border); }
+  .detail-val { font-weight: 500; }
+  .close-btn { width: 100%; margin-top: 1.25rem; padding: 13px; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius); color: var(--text2); font-size: 14px; cursor: pointer; }
+
+  /* GESTÃO */
+  .mgmt-header { padding: 1rem 1.25rem 0.5rem; display: flex; align-items: center; justify-content: space-between; }
+  .mgmt-title { font-size: 16px; font-weight: 600; }
+  .mgmt-subtitle { font-size: 11px; color: var(--text2); margin-top: 2px; }
+  .add-btn { background: var(--accent); border: none; border-radius: 10px; padding: 9px 16px; color: white; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; -webkit-tap-highlight-color: transparent; }
+  .mgmt-search-wrap { padding: 0 1.25rem 0.75rem; position: relative; }
+  .mgmt-search-wrap svg { position: absolute; left: calc(1.25rem + 12px); top: 50%; transform: translateY(-50%); color: var(--text2); pointer-events: none; }
+  #mgmt-search { width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 12px 10px 38px; font-size: 14px; color: var(--text); outline: none; }
+  #mgmt-search:focus { border-color: var(--accent); }
+  #mgmt-search::placeholder { color: var(--text2); }
+  .mgmt-list { padding: 0 1.25rem; }
+  .mgmt-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 0.85rem 1rem; margin-bottom: 8px; display: flex; align-items: center; gap: 10px; }
+  .mgmt-card-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0; }
+  .mrow-A .mgmt-card-icon { background: rgba(79,142,247,0.15); color: var(--accent); }
+  .mrow-B .mgmt-card-icon { background: rgba(124,58,237,0.15); color: #a78bfa; }
+  .mrow-C .mgmt-card-icon { background: rgba(34,197,94,0.15); color: var(--green); }
+  .mgmt-card-info { flex: 1; min-width: 0; }
+  .mgmt-card-name { font-size: 13px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .mgmt-card-loc { font-size: 11px; color: var(--text2); margin-top: 2px; }
+  .mgmt-actions { display: flex; gap: 6px; flex-shrink: 0; }
+  .icon-btn { width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface2); cursor: pointer; display: flex; align-items: center; justify-content: center; -webkit-tap-highlight-color: transparent; }
+  .icon-btn.edit { color: var(--accent); } .icon-btn.del { color: var(--red); }
+
+  /* MODAL FORM */
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 400; align-items: flex-end; justify-content: center; }
+  .modal-overlay.open { display: flex; }
+  .modal-sheet { background: var(--surface); border-radius: 20px 20px 0 0; padding: 1.5rem 1.5rem 2rem; width: 100%; max-width: 480px; animation: slideUp 0.2s ease; }
+  .modal-title { font-size: 16px; font-weight: 600; margin-bottom: 1rem; text-align: center; }
+  .loc-preview { text-align: center; font-size: 30px; font-weight: 700; padding: 10px; background: var(--surface2); border-radius: 10px; margin-bottom: 1rem; background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .form-group { margin-bottom: 0.85rem; }
+  .form-label { font-size: 12px; color: var(--text2); margin-bottom: 5px; display: block; font-weight: 500; }
+  .form-input, .form-select { width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; font-size: 14px; color: var(--text); outline: none; transition: border-color 0.2s; -webkit-appearance: none; appearance: none; }
+  .form-input:focus, .form-select:focus { border-color: var(--accent); }
+  .form-select option { background: var(--surface); }
+  .form-row { display: flex; gap: 10px; }
+  .form-row .form-group { flex: 1; }
+  .form-btns { display: flex; gap: 10px; margin-top: 1.25rem; }
+  .btn-cancel { flex: 1; padding: 12px; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius); color: var(--text2); font-size: 14px; cursor: pointer; }
+  .btn-save { flex: 2; padding: 12px; background: var(--accent); border: none; border-radius: var(--radius); color: white; font-size: 14px; font-weight: 600; cursor: pointer; }
+
+  /* CONFIRM */
+  .confirm-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 500; align-items: center; justify-content: center; padding: 2rem; }
+  .confirm-overlay.open { display: flex; }
+  .confirm-box { background: var(--surface); border-radius: 16px; padding: 1.5rem; width: 100%; max-width: 320px; text-align: center; }
+  .confirm-title { font-size: 16px; font-weight: 600; margin-bottom: 0.5rem; }
+  .confirm-msg { font-size: 13px; color: var(--text2); margin-bottom: 1.25rem; line-height: 1.5; }
+  .confirm-btns { display: flex; gap: 10px; }
+  .btn-cc { flex: 1; padding: 11px; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; color: var(--text2); font-size: 14px; cursor: pointer; }
+  .btn-co { flex: 1; padding: 11px; background: var(--red); border: none; border-radius: 10px; color: white; font-size: 14px; font-weight: 600; cursor: pointer; }
+
+  /* PIN OVERLAY */
+  .pin-overlay { display: none; position: fixed; inset: 0; background: var(--bg); z-index: 350; flex-direction: column; align-items: center; justify-content: center; padding: 2rem; }
+  .pin-overlay.open { display: flex; }
+  .pin-logo { width: 56px; height: 56px; background: linear-gradient(135deg, var(--accent), var(--accent2)); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 26px; margin-bottom: 1.25rem; }
+  .pin-title { font-size: 18px; font-weight: 600; margin-bottom: 0.4rem; }
+  .pin-sub { font-size: 13px; color: var(--text2); margin-bottom: 2rem; text-align: center; }
+  .pin-dots { display: flex; gap: 14px; margin-bottom: 2rem; }
+  .pin-dot { width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--text2); background: transparent; transition: all 0.15s; }
+  .pin-dot.filled { background: var(--accent); border-color: var(--accent); }
+  .pin-dot.error { background: var(--red); border-color: var(--red); }
+  .pin-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; width: 100%; max-width: 280px; }
+  .pin-key { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; height: 64px; font-size: 22px; font-weight: 600; color: var(--text); cursor: pointer; display: flex; align-items: center; justify-content: center; -webkit-tap-highlight-color: transparent; transition: background 0.1s; user-select: none; }
+  .pin-key:active { background: var(--surface2); }
+  .pin-key.del { font-size: 18px; color: var(--text2); }
+  .pin-error-msg { font-size: 13px; color: var(--red); margin-top: 1rem; min-height: 20px; }
+  .pin-cancel { margin-top: 1.5rem; font-size: 13px; color: var(--text2); background: none; border: none; cursor: pointer; padding: 8px 16px; }
+
+  /* CHANGE PIN */
+  .pin-change-wrap { margin-top: 1rem; text-align: center; }
+  .pin-change-btn { font-size: 12px; color: var(--text2); background: none; border: none; cursor: pointer; text-decoration: underline; }
+
+  /* TOAST */
+  .toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 8px 18px; font-size: 13px; color: var(--text); opacity: 0; transition: all 0.3s; z-index: 600; white-space: nowrap; box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 </style>
 </head>
 <body>
 
-<header>
+<header id="main-header">
   <div class="header-top">
     <div class="logo">📦</div>
-    <div>
-      <h1>Localizador de Adaptadores</h1>
-      <div class="subtitle">Pesquisa em armazém</div>
-    </div>
+    <div><h1>Localizador de Adaptadores</h1><div class="subtitle">Pesquisa em armazém</div></div>
   </div>
-  <div class="search-wrap">
+  <div class="search-wrap" id="search-wrap">
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
     <input type="search" id="search" placeholder="Pesquisar adaptador ou localização..." autocomplete="off" autocorrect="off" spellcheck="false">
   </div>
 </header>
 
-<div class="filters" id="filters">
-  <button class="filter-btn active" data-filter="all">Todos</button>
-  <button class="filter-btn" data-filter="A">Fila A</button>
-  <button class="filter-btn" data-filter="B">Fila B</button>
-  <button class="filter-btn" data-filter="C">Fila C</button>
-  <button class="filter-btn" data-filter="T">Atrás (T)</button>
-  <button class="filter-btn" data-filter="F">Frente (F)</button>
-</div>
-
-<div class="stats">
-  <div class="stat"><strong id="stat-total">0</strong>itens</div>
-  <div class="stat"><strong id="stat-shown">0</strong>visíveis</div>
-  <div class="stat"><strong id="stat-locs">0</strong>locais</div>
-</div>
-
-<div class="map-section">
-  <div class="section-label" style="padding-top:0.75rem;padding-bottom:0.5rem;">Mapa da estante</div>
-  <div class="map-wrap">
-    <div id="map-table-container"></div>
-    <div class="map-legend">
-      <div class="map-leg"><div class="map-leg-dot" style="background:rgba(79,142,247,0.18);border:1px solid rgba(79,142,247,0.4);"></div>Fila A</div>
-      <div class="map-leg"><div class="map-leg-dot" style="background:rgba(124,58,237,0.18);border:1px solid rgba(124,58,237,0.4);"></div>Fila B</div>
-      <div class="map-leg"><div class="map-leg-dot" style="background:rgba(34,197,94,0.18);border:1px solid rgba(34,197,94,0.4);"></div>Fila C</div>
-      <div class="map-leg"><div class="map-leg-dot" style="background:#facc15;border:1px solid #eab308;"></div>resultado</div>
+<!-- PAGE: PESQUISA -->
+<div class="page active" id="page-search">
+  <div class="filters">
+    <button class="filter-btn active" data-filter="all">Todos</button>
+    <button class="filter-btn" data-filter="A">Fila A</button>
+    <button class="filter-btn" data-filter="B">Fila B</button>
+    <button class="filter-btn" data-filter="C">Fila C</button>
+    <button class="filter-btn" data-filter="T">Atrás (T)</button>
+    <button class="filter-btn" data-filter="F">Frente (F)</button>
+  </div>
+  <div class="stats">
+    <div class="stat"><strong id="stat-total">0</strong>itens</div>
+    <div class="stat"><strong id="stat-shown">0</strong>visíveis</div>
+    <div class="stat"><strong id="stat-locs">0</strong>locais</div>
+  </div>
+  <div class="map-section">
+    <div class="section-label" style="padding-top:0.5rem;padding-bottom:0.5rem;">Mapa da estante</div>
+    <div class="map-wrap">
+      <div id="map-table-container"></div>
+      <div class="map-legend">
+        <div class="map-leg"><div class="map-leg-dot" style="background:rgba(79,142,247,0.18);border:1px solid rgba(79,142,247,0.4);"></div>Fila A</div>
+        <div class="map-leg"><div class="map-leg-dot" style="background:rgba(124,58,237,0.18);border:1px solid rgba(124,58,237,0.4);"></div>Fila B</div>
+        <div class="map-leg"><div class="map-leg-dot" style="background:rgba(34,197,94,0.18);border:1px solid rgba(34,197,94,0.4);"></div>Fila C</div>
+        <div class="map-leg"><div class="map-leg-dot" style="background:#facc15;"></div>resultado</div>
+      </div>
     </div>
   </div>
+  <div class="results" id="results"></div>
 </div>
 
-<div class="results" id="results"></div>
+<!-- PAGE: GESTÃO -->
+<div class="page" id="page-mgmt">
+  <div class="mgmt-header">
+    <div>
+      <div class="mgmt-title">Gestão de Itens</div>
+      <div class="mgmt-subtitle" id="mgmt-count"></div>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
+      <button class="add-btn" id="btn-add">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+        Adicionar
+      </button>
+      <button onclick="startChangePin()" style="font-size:11px;color:var(--text2);background:none;border:none;cursor:pointer;">🔑 Alterar PIN</button>
+    </div>
+  </div>
+  <div class="mgmt-search-wrap">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+    <input type="search" id="mgmt-search" placeholder="Filtrar itens..." autocomplete="off">
+  </div>
+  <div class="mgmt-list" id="mgmt-list"></div>
+</div>
 
+<!-- PIN OVERLAY -->
+<div class="pin-overlay" id="pin-overlay">
+  <div class="pin-logo">🔒</div>
+  <div class="pin-title" id="pin-title">Acesso à Gestão</div>
+  <div class="pin-sub" id="pin-sub">Introduz o PIN de 4 dígitos</div>
+  <div class="pin-dots" id="pin-dots">
+    <div class="pin-dot" id="pd0"></div>
+    <div class="pin-dot" id="pd1"></div>
+    <div class="pin-dot" id="pd2"></div>
+    <div class="pin-dot" id="pd3"></div>
+  </div>
+  <div class="pin-grid">
+    <button class="pin-key" onclick="pinKey('1')">1</button>
+    <button class="pin-key" onclick="pinKey('2')">2</button>
+    <button class="pin-key" onclick="pinKey('3')">3</button>
+    <button class="pin-key" onclick="pinKey('4')">4</button>
+    <button class="pin-key" onclick="pinKey('5')">5</button>
+    <button class="pin-key" onclick="pinKey('6')">6</button>
+    <button class="pin-key" onclick="pinKey('7')">7</button>
+    <button class="pin-key" onclick="pinKey('8')">8</button>
+    <button class="pin-key" onclick="pinKey('9')">9</button>
+    <button class="pin-key" style="visibility:hidden;"></button>
+    <button class="pin-key" onclick="pinKey('0')">0</button>
+    <button class="pin-key del" onclick="pinDel()">⌫</button>
+  </div>
+  <div class="pin-error-msg" id="pin-error"></div>
+  <button class="pin-cancel" id="pin-cancel-btn" onclick="closePinOverlay()">Cancelar</button>
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <button class="nav-btn active" id="nav-search" onclick="switchPage('search')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+    Pesquisar
+  </button>
+  <button class="nav-btn" id="nav-mgmt" onclick="switchPage('mgmt')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+    Gestão
+  </button>
+</nav>
+
+<!-- DETAIL SHEET -->
 <div class="detail-overlay" id="overlay">
-  <div class="detail-sheet" id="sheet">
+  <div class="detail-sheet">
     <div class="detail-handle"></div>
     <div class="detail-loc" id="d-loc"></div>
     <div class="detail-name" id="d-name"></div>
@@ -345,306 +291,467 @@
   </div>
 </div>
 
+<!-- FORM MODAL -->
+<div class="modal-overlay" id="modal">
+  <div class="modal-sheet">
+    <div class="modal-title" id="modal-title">Adicionar Item</div>
+    <div class="loc-preview" id="loc-preview">--</div>
+    <div class="form-group">
+      <label class="form-label">Nome do Adaptador</label>
+      <input type="text" class="form-input" id="f-nome" placeholder="ex: MAP8014" autocomplete="off" autocorrect="off">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Fila</label>
+        <select class="form-select" id="f-row"><option value="A">A</option><option value="B">B</option><option value="C">C</option></select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Posição</label>
+        <select class="form-select" id="f-col">
+          <option value="01">1</option><option value="02">2</option><option value="03">3</option>
+          <option value="04">4</option><option value="05">5</option><option value="06">6</option>
+          <option value="07">7</option><option value="08">8</option><option value="09">9</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Lado</label>
+        <select class="form-select" id="f-side"><option value="F">Frente</option><option value="T">Atrás</option></select>
+      </div>
+    </div>
+    <div class="form-btns">
+      <button class="btn-cancel" id="modal-cancel">Cancelar</button>
+      <button class="btn-save" id="modal-save">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRM -->
+<div class="confirm-overlay" id="confirm-overlay">
+  <div class="confirm-box">
+    <div class="confirm-title">⚠️ Remover item?</div>
+    <div class="confirm-msg" id="confirm-msg"></div>
+    <div class="confirm-btns">
+      <button class="btn-cc" id="confirm-cancel">Cancelar</button>
+      <button class="btn-co" id="confirm-ok">Remover</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
 <script>
-const DATA = [
-  {nome:"SA050005",index:"AT-01"},
-  {nome:"SA030005",index:"AT-01"},
-  {nome:"SA030004",index:"AT-01"},
-  {nome:"SNMP",index:"AT-01"},
-  {nome:"MAP10002",index:"AT-01"},
-  {nome:"Programadores",index:"AF-01"},
-  {nome:"Cabos osciloscopio",index:"AF-01"},
-  {nome:"Cabos USB",index:"AF-01"},
-  {nome:"Conversores RS232",index:"AF-01"},
-  {nome:"MAP8100 V2",index:"AT-02"},
-  {nome:"MAP8100 V1",index:"AT-02"},
-  {nome:"MAP8100 V2",index:"AF-02"},
-  {nome:"D050",index:"AT-03"},
-  {nome:"MMC",index:"AT-03"},
-  {nome:"MAP8014",index:"AT-04"},
-  {nome:"MAP8100-01",index:"AT-04"},
-  {nome:"MAP8014-01",index:"AT-04"},
-  {nome:"MAP8181",index:"AT-04"},
-  {nome:"SA950009",index:"AF-04"},
-  {nome:"PS010007",index:"AF-04"},
-  {nome:"SA1100000",index:"AF-04"},
-  {nome:"SA000010",index:"AF-04"},
-  {nome:"SA140001",index:"AF-04"},
-  {nome:"SA960000",index:"AF-04"},
-  {nome:"RCU220",index:"AT-05"},
-  {nome:"TPU 220-1",index:"AT-05"},
-  {nome:"MAP3020",index:"AF-05"},
-  {nome:"G-Fault",index:"AF-05"},
-  {nome:"MAP3081",index:"AF-05"},
-  {nome:"MAP3080",index:"AF-05"},
-  {nome:"MAP3050",index:"AF-05"},
-  {nome:"MiniPSM-2",index:"AT-06"},
-  {nome:"PS000017",index:"AT-06"},
-  {nome:"Bar SOM-MX7",index:"AT-06"},
+const BASE_DATA = [
+  {nome:"SA050005",index:"AT-01"},{nome:"SA030005",index:"AT-01"},{nome:"SA030004",index:"AT-01"},
+  {nome:"SNMP",index:"AT-01"},{nome:"MAP10002",index:"AT-01"},
+  {nome:"Programadores",index:"AF-01"},{nome:"Cabos osciloscopio",index:"AF-01"},
+  {nome:"Cabos USB",index:"AF-01"},{nome:"Conversores RS232",index:"AF-01"},
+  {nome:"MAP8100 V2",index:"AT-02"},{nome:"MAP8100 V2",index:"AF-02"},
+  {nome:"D050",index:"AT-03"},{nome:"MMC",index:"AT-03"},
+  {nome:"MAP8014",index:"AT-04"},{nome:"MAP8100-01",index:"AT-04"},{nome:"MAP8014-01",index:"AT-04"},
+  {nome:"SA950009",index:"AF-04"},{nome:"PS010007",index:"AF-04"},{nome:"SA1100000",index:"AF-04"},
+  {nome:"SA000010",index:"AF-04"},{nome:"SA140001",index:"AF-04"},{nome:"SA960000",index:"AF-04"},
+  {nome:"RCU220",index:"AT-05"},{nome:"TPU 220-1",index:"AT-05"},
+  {nome:"MAP3020",index:"AF-05"},{nome:"G-Fault",index:"AF-05"},{nome:"MAP3081",index:"AF-05"},
+  {nome:"MAP3080",index:"AF-05"},{nome:"MAP3050",index:"AF-05"},
+  {nome:"MiniPSM-2",index:"AT-06"},{nome:"PS000017",index:"AT-06"},{nome:"Bar SOM-MX7",index:"AT-06"},
   {nome:"MAP8061",index:"BT-01"},
-  {nome:"MAP8021",index:"BF-01"},
-  {nome:"SA070004 OP1/OP2",index:"BF-01"},
-  {nome:"SA000011",index:"BF-01"},
-  {nome:"MAP8100_01",index:"BF-01"},
-  {nome:"MAP8161",index:"BF-01"},
-  {nome:"MAP8051",index:"BF-01"},
-  {nome:"MAP8050",index:"BF-01"},
+  {nome:"MAP8021",index:"BF-01"},{nome:"SA070004 OP1/OP2",index:"BF-01"},{nome:"SA000011",index:"BF-01"},
+  {nome:"MAP8100_01",index:"BF-01"},{nome:"MAP8161",index:"BF-01"},{nome:"MAP8051",index:"BF-01"},{nome:"MAP8050",index:"BF-01"},
   {nome:"MAP8100_02/04/05/06",index:"BT-02"},
-  {nome:"Micro-URR",index:"BF-02"},
-  {nome:"MAP8012",index:"BF-02"},
-  {nome:"MAP8011",index:"BF-02"},
-  {nome:"MAP8010",index:"BF-02"},
-  {nome:"ATE-BCU",index:"BT-03"},
-  {nome:"MCU500-2 equipamento",index:"BF-03"},
+  {nome:"Micro-URR",index:"BF-02"},{nome:"MAP8012",index:"BF-02"},{nome:"MAP8011",index:"BF-02"},{nome:"MAP8010",index:"BF-02"},
+  {nome:"ATE-BCU",index:"BT-03"},{nome:"MCU500-2 equipamento",index:"BF-03"},
   {nome:"DCU500H",index:"BT-04"},
-  {nome:"UC500E-1",index:"BF-04"},
-  {nome:"UC500E-2",index:"BF-04"},
-  {nome:"UC500E-3",index:"BF-04"},
-  {nome:"MAP8030",index:"BT-05"},
-  {nome:"MAP8110",index:"BT-05"},
-  {nome:"MAP8081 OP1 - OP2",index:"BT-05"},
-  {nome:"MAP8080",index:"BT-05"},
-  {nome:"MAP8031",index:"BT-05"},
-  {nome:"MAP8020",index:"BF-05"},
-  {nome:"Adaptador generico 4VQ163003",index:"BF-05"},
-  {nome:"MAP8021 V1",index:"BF-05"},
-  {nome:"MAP3200",index:"BT-06"},
-  {nome:"MAP7360",index:"BT-06"},
-  {nome:"MAP7381",index:"BT-06"},
-  {nome:"MAP7330",index:"BT-06"},
-  {nome:"Painel CLP 500",index:"BF-06"},
-  {nome:"Modulos Voyant",index:"BF-06"},
-  {nome:"Estudo Pimenta",index:"BT-07"},
-  {nome:"Rack MAP8110",index:"BT-07"},
+  {nome:"UC500E-1",index:"BF-04"},{nome:"UC500E-2",index:"BF-04"},{nome:"UC500E-3",index:"BF-04"},
+  {nome:"MAP8030",index:"BT-05"},{nome:"MAP8110",index:"BT-05"},{nome:"MAP8081 OP1 - OP2",index:"BT-05"},
+  {nome:"MAP8080",index:"BT-05"},{nome:"MAP8031",index:"BT-05"},
+  {nome:"MAP8020",index:"BF-05"},{nome:"Adaptador generico 4VQ163003",index:"BF-05"},{nome:"MAP8021 V1",index:"BF-05"},
+  {nome:"MAP3200",index:"BT-06"},{nome:"MAP7360",index:"BT-06"},{nome:"MAP7381",index:"BT-06"},{nome:"MAP7330",index:"BT-06"},
+  {nome:"Painel CLP 500",index:"BF-06"},{nome:"Modulos Voyant",index:"BF-06"},
+  {nome:"Estudo Pimenta",index:"BT-07"},{nome:"Rack MAP8110",index:"BT-07"},
   {nome:"Estudo Pimenta",index:"BF-07"},
-  {nome:"Celula 3 Mário Nogueira",index:"BT-08"},
-  {nome:"Celula 3 Mário Nogueira",index:"BF-08"},
-  {nome:"Cabos GPIB",index:"CT-01"},
-  {nome:"controladores fontes Delta",index:"CT-01"},
-  {nome:"tubo extrator",index:"CT-01"},
-  {nome:"Cabos mala Omicron",index:"CT-01"},
+  {nome:"Celula 3 Mário Nogueira",index:"BT-08"},{nome:"Celula 3 Mário Nogueira",index:"BF-08"},
+  {nome:"Cabos GPIB",index:"CT-01"},{nome:"controladores fontes Delta",index:"CT-01"},
+  {nome:"tubo extrator",index:"CT-01"},{nome:"Cabos mala Omicron",index:"CT-01"},
   {nome:"APSM+",index:"CF-01"},
-  {nome:"Resostatos",index:"CT-02"},
-  {nome:"Berbequim",index:"CT-02"},
-  {nome:"Triplas",index:"CT-02"},
-  {nome:"Cabos de rede",index:"CT-02"},
-  {nome:"MAP8052",index:"CF-02"},
-  {nome:"MAP8081",index:"CF-02"},
-  {nome:"MCU500-2 teste cartas",index:"CT-03"},
-  {nome:"MAP8282",index:"CT-03"},
-  {nome:"MAP8261",index:"CT-03"},
-  {nome:"MAP8252",index:"CT-03"},
-  {nome:"MAP8251",index:"CT-03"},
-  {nome:"MAP8220",index:"CT-03"},
-  {nome:"MAP8210",index:"CT-03"},
-  {nome:"MAP8200",index:"CF-03"},
-  {nome:"MAP8291",index:"CF-03"},
-  {nome:"MAP8180",index:"CT-04"},
-  {nome:"MAP8082 (falta CPU)",index:"CT-04"},
-  {nome:"MAP8180",index:"CF-04"},
-  {nome:"MAP8082",index:"CF-04"},
-  {nome:"Sucata cartas diversas MAP30xx",index:"CT-05"},
-  {nome:"Cartas MAP8200 estudo",index:"CT-05"},
-  {nome:"Agulhas",index:"CT-05"},
+  {nome:"Resostatos",index:"CT-02"},{nome:"Berbequim",index:"CT-02"},{nome:"Triplas",index:"CT-02"},{nome:"Cabos de rede",index:"CT-02"},
+  {nome:"MAP8052",index:"CF-02"},{nome:"MAP8081",index:"CF-02"},
+  {nome:"MCU500-2 teste cartas",index:"CT-03"},{nome:"MAP8282",index:"CT-03"},{nome:"MAP8261",index:"CT-03"},
+  {nome:"MAP8252",index:"CT-03"},{nome:"MAP8251",index:"CT-03"},{nome:"MAP8220",index:"CT-03"},{nome:"MAP8210",index:"CT-03"},
+  {nome:"MAP8200",index:"CF-03"},{nome:"MAP8291",index:"CF-03"},
+  {nome:"MAP8180",index:"CT-04"},{nome:"MAP8082 (falta CPU)",index:"CT-04"},
+  {nome:"MAP8180",index:"CF-04"},{nome:"MAP8082",index:"CF-04"},
+  {nome:"Sucata cartas diversas MAP30xx",index:"CT-05"},{nome:"Cartas MAP8200 estudo",index:"CT-05"},{nome:"Agulhas",index:"CT-05"},
   {nome:"Mini-PSM, PSM",index:"CF-05"},
-  {nome:"Componentes SMD, THT",index:"CT-06"},
-  {nome:"Processador MAP80xx",index:"CT-06"},
+  {nome:"Componentes SMD, THT",index:"CT-06"},{nome:"Processador MAP80xx",index:"CT-06"},
   {nome:"Material António",index:"CF-06"},
-  {nome:"Estudo Pimenta",index:"CT-07"},
-  {nome:"Estudo Pimenta",index:"CF-07"},
-  {nome:"Celula 3 Mário Nogueira",index:"CT-08"},
-  {nome:"Celula 3 Mário Nogueira",index:"CF-08"},
+  {nome:"Estudo Pimenta",index:"CT-07"},{nome:"Estudo Pimenta",index:"CF-07"},
+  {nome:"Celula 3 Mário Nogueira",index:"CT-08"},{nome:"Celula 3 Mário Nogueira",index:"CF-08"},
 ];
 
+// Storage
+function loadExtra() { try { return JSON.parse(localStorage.getItem('extra_items')||'[]'); } catch { return []; } }
+function saveExtra(a) { localStorage.setItem('extra_items', JSON.stringify(a)); }
+function loadDeleted() { try { return JSON.parse(localStorage.getItem('deleted_ids')||'[]'); } catch { return []; } }
+function saveDeleted(a) { localStorage.setItem('deleted_ids', JSON.stringify(a)); }
+
+let extraItems = loadExtra();
+let deletedIds = loadDeleted();
+
+function getData() {
+  const base = BASE_DATA
+    .map((d,i) => ({...d, _id:'b'+i}))
+    .filter(d => !deletedIds.includes(d._id));
+  return [...base, ...extraItems.map(e => ({...e, _id:e.id}))];
+}
+
+// Utils
 function parseIndex(idx) {
-  const row = idx[0];
-  const side = idx[1];
-  const num = parseInt(idx.slice(3));
-  return { row, side, num, sideLabel: side === 'T' ? 'Atrás' : 'Frente' };
+  const row=idx[0], side=idx[1], num=parseInt(idx.slice(3));
+  return {row, side, num, sideLabel: side==='T'?'Atrás':'Frente'};
+}
+function rowClass(r) { return r==='A'?'row-A':r==='B'?'row-B':'row-C'; }
+function mrowClass(r) { return r==='A'?'mrow-A':r==='B'?'mrow-B':'mrow-C'; }
+function hl(text, q) {
+  if (!q) return text;
+  return text.replace(new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`, 'gi'), '<mark>$1</mark>');
+}
+function toast(msg) {
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2200);
 }
 
-let currentFilter = 'all';
-let currentQuery = '';
-let selectedItem = null;
-
-function highlight(text, query) {
-  if (!query) return text;
-  const re = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`, 'gi');
-  return text.replace(re, '<mark>$1</mark>');
+// Page switch
+function switchPage(page) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+page).classList.add('active');
+  document.getElementById('nav-'+page).classList.add('active');
+  document.getElementById('search-wrap').style.display = page==='mgmt'?'none':'block';
+  if (page==='mgmt') renderMgmt();
 }
 
-function rowClass(row) {
-  return row === 'A' ? 'row-A' : row === 'B' ? 'row-B' : 'row-C';
-}
+// ── SEARCH ──
+let currentFilter='all', currentQuery='';
 
 function render() {
-  const q = currentQuery.trim().toLowerCase();
-  const f = currentFilter;
-
-  const filtered = DATA.filter(d => {
-    const p = parseIndex(d.index);
-    const matchFilter = f === 'all' ||
-      (f === 'A' && p.row === 'A') ||
-      (f === 'B' && p.row === 'B') ||
-      (f === 'C' && p.row === 'C') ||
-      (f === 'T' && p.side === 'T') ||
-      (f === 'F' && p.side === 'F');
-    if (!matchFilter) return false;
-    if (!q) return true;
-    return d.nome.toLowerCase().includes(q) || d.index.toLowerCase().includes(q);
+  const DATA=getData(), q=currentQuery.trim().toLowerCase(), f=currentFilter;
+  const filtered=DATA.filter(d=>{
+    const p=parseIndex(d.index);
+    const mf=f==='all'||(f==='A'&&p.row==='A')||(f==='B'&&p.row==='B')||(f==='C'&&p.row==='C')||(f==='T'&&p.side==='T')||(f==='F'&&p.side==='F');
+    return mf && (!q || d.nome.toLowerCase().includes(q) || d.index.toLowerCase().includes(q));
   });
-
-  const locs = new Set(filtered.map(d => d.index)).size;
-  document.getElementById('stat-total').textContent = DATA.length;
-  document.getElementById('stat-shown').textContent = filtered.length;
-  document.getElementById('stat-locs').textContent = locs;
-
-  const container = document.getElementById('results');
-  if (filtered.length === 0) {
-    container.innerHTML = `<div class="empty"><div class="icon">🔍</div><p>Nenhum resultado encontrado</p></div>`;
-    return;
-  }
-
-  // Group by location
-  const groups = {};
-  filtered.forEach(d => {
-    if (!groups[d.index]) groups[d.index] = [];
-    groups[d.index].push(d);
+  const locs=new Set(filtered.map(d=>d.index)).size;
+  document.getElementById('stat-total').textContent=DATA.length;
+  document.getElementById('stat-shown').textContent=filtered.length;
+  document.getElementById('stat-locs').textContent=locs;
+  const container=document.getElementById('results');
+  if (!filtered.length) { container.innerHTML=`<div class="empty"><div class="icon">🔍</div><p>Nenhum resultado encontrado</p></div>`; return; }
+  const groups={};
+  filtered.forEach(d=>{ if(!groups[d.index]) groups[d.index]=[]; groups[d.index].push(d); });
+  const sorted=Object.keys(groups).sort((a,b)=>{
+    const pa=parseIndex(a), pb=parseIndex(b);
+    if(pa.row!==pb.row) return pa.row<pb.row?-1:1;
+    if(pa.num!==pb.num) return pa.num-pb.num;
+    return pa.side<pb.side?-1:1;
   });
-
-  const sorted = Object.keys(groups).sort((a,b) => {
-    const pa = parseIndex(a), pb = parseIndex(b);
-    if (pa.row !== pb.row) return pa.row < pb.row ? -1 : 1;
-    if (pa.num !== pb.num) return pa.num - pb.num;
-    return pa.side < pb.side ? -1 : 1;
-  });
-
-  let html = '';
-  sorted.forEach(loc => {
-    const p = parseIndex(loc);
-    const rc = rowClass(p.row);
-    if (!q) {
-      html += `<div class="section-label">Fila ${p.row} · Posição ${p.num} · ${p.sideLabel}</div>`;
-    }
-    groups[loc].forEach(item => {
-      const hn = highlight(item.nome, currentQuery);
-      const hi = highlight(item.index, currentQuery);
-      html += `<div class="card ${rc}" data-nome="${item.nome}" data-index="${item.index}">
+  let html='';
+  sorted.forEach(loc=>{
+    const p=parseIndex(loc), rc=rowClass(p.row);
+    if (!q) html+=`<div class="section-label">Fila ${p.row} · Posição ${p.num} · ${p.sideLabel}</div>`;
+    groups[loc].forEach(item=>{
+      const newB=item.added?'<span class="new-badge">novo</span>':'';
+      html+=`<div class="card ${rc}" data-nome="${item.nome.replace(/"/g,'&quot;')}" data-index="${item.index}">
         <div class="card-icon">${p.row}${p.num}</div>
         <div class="card-info">
-          <div class="card-name">${hn}</div>
+          <div class="card-name">${hl(item.nome,currentQuery)}${newB}</div>
           <div class="card-sub">Fila ${p.row} · Posição ${p.num} · ${p.sideLabel}</div>
         </div>
-        <div class="badge">${hi}</div>
+        <div class="badge">${hl(item.index,currentQuery)}</div>
       </div>`;
     });
   });
-
-  container.innerHTML = html;
-
-  container.querySelectorAll('.card').forEach(card => {
-    card.addEventListener('click', () => {
-      const nome = card.dataset.nome;
-      const index = card.dataset.index;
-      const p = parseIndex(index);
-      showDetail(nome, index, p);
-    });
+  container.innerHTML=html;
+  container.querySelectorAll('.card').forEach(card=>{
+    card.addEventListener('click',()=>{ const p=parseIndex(card.dataset.index); showDetail(card.dataset.nome,card.dataset.index,p); });
   });
+  rebuildMap();
 }
 
-function showDetail(nome, index, p) {
-  document.getElementById('d-loc').textContent = index;
-  document.getElementById('d-name').textContent = nome;
-  document.getElementById('d-details').innerHTML = `
+function showDetail(nome,index,p) {
+  document.getElementById('d-loc').textContent=index;
+  document.getElementById('d-name').textContent=nome;
+  document.getElementById('d-details').innerHTML=`
     <div class="detail-row"><span class="detail-label">Fila</span><span class="detail-val">${p.row}</span></div>
     <div class="detail-row"><span class="detail-label">Posição</span><span class="detail-val">${p.num}</span></div>
     <div class="detail-row"><span class="detail-label">Localização</span><span class="detail-val">${p.sideLabel}</span></div>
-    <div class="detail-row"><span class="detail-label">Código completo</span><span class="detail-val">${index}</span></div>
-  `;
+    <div class="detail-row"><span class="detail-label">Código completo</span><span class="detail-val">${index}</span></div>`;
   document.getElementById('overlay').classList.add('open');
 }
+document.getElementById('close-btn').addEventListener('click',()=>document.getElementById('overlay').classList.remove('open'));
+document.getElementById('overlay').addEventListener('click',e=>{ if(e.target===document.getElementById('overlay')) document.getElementById('overlay').classList.remove('open'); });
 
-document.getElementById('close-btn').addEventListener('click', () => {
-  document.getElementById('overlay').classList.remove('open');
+document.getElementById('search').addEventListener('input',e=>{
+  currentQuery=e.target.value; render();
+  const q=e.target.value.trim().toLowerCase();
+  const hits=q?[...new Set(getData().filter(d=>d.nome.toLowerCase().includes(q)||d.index.toLowerCase().includes(q)).map(d=>d.index))]:[];
+  highlightMap(hits);
 });
-document.getElementById('overlay').addEventListener('click', e => {
-  if (e.target === document.getElementById('overlay'))
-    document.getElementById('overlay').classList.remove('open');
-});
-
-document.getElementById('search').addEventListener('input', e => {
-  currentQuery = e.target.value;
-  render();
-  const q = e.target.value.trim().toLowerCase();
-  if (q) {
-    const hits = [...new Set(DATA.filter(d => d.nome.toLowerCase().includes(q)||d.index.toLowerCase().includes(q)).map(d=>d.index))];
-    highlightMap(hits);
-  } else {
-    highlightMap([]);
-  }
+document.querySelectorAll('.filter-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{ document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); currentFilter=btn.dataset.filter; render(); });
 });
 
-document.querySelectorAll('.filter-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    currentFilter = btn.dataset.filter;
-    render();
-  });
-});
-
-const byLoc = {};
-DATA.forEach(d => { byLoc[d.index] = byLoc[d.index]||[]; byLoc[d.index].push(d.nome); });
-
-function buildMap() {
-  const ROWS = ['A','B','C'];
-  const COLS = [1,2,3,4,5,6,7,8];
-  const SIDES = ['F','T'];
-  let h = '<table class="map-table"><thead><tr><th></th>';
-  COLS.forEach(c => { h += `<th class="col-num" colspan="2">${c}</th>`; });
-  h += '</tr><tr><th></th>';
-  COLS.forEach(() => { h += '<th style="font-size:10px;color:var(--text2);">F</th><th style="font-size:10px;color:var(--text2);">T</th>'; });
-  h += '</tr></thead><tbody>';
-  ROWS.forEach(row => {
-    const rc = row === 'A' ? 'rA' : row === 'B' ? 'rB' : 'rC';
-    h += `<tr><td class="map-row-label ${rc}">${row}</td>`;
-    COLS.forEach(col => {
-      SIDES.forEach(side => {
-        const key = `${row}${side}-0${col}`;
-        const items = byLoc[key]||[];
-        const cls = items.length ? 'has-items' : '';
-        h += `<td class="mcell ${rc} ${cls}" id="mc-${key}" data-key="${key}">${items.length||''}</td>`;
+// ── MAP ──
+function rebuildMap() {
+  const DATA=getData(), byLoc={};
+  DATA.forEach(d=>{ byLoc[d.index]=byLoc[d.index]||[]; byLoc[d.index].push(d.nome); });
+  const ROWS=['A','B','C'], COLS=[1,2,3,4,5,6,7,8], SIDES=['F','T'];
+  let h='<table class="map-table"><thead><tr><th></th>';
+  COLS.forEach(c=>{ h+=`<th class="col-num" colspan="2">${c}</th>`; });
+  h+='</tr><tr><th></th>';
+  COLS.forEach(()=>{ h+='<th style="font-size:10px;color:var(--text2);">F</th><th style="font-size:10px;color:var(--text2);">T</th>'; });
+  h+='</tr></thead><tbody>';
+  ROWS.forEach(row=>{
+    const rc=row==='A'?'rA':row==='B'?'rB':'rC';
+    h+=`<tr><td class="map-row-label ${rc}">${row}</td>`;
+    COLS.forEach(col=>{
+      SIDES.forEach(side=>{
+        const key=`${row}${side}-0${col}`, items=byLoc[key]||[];
+        h+=`<td class="mcell ${rc}${items.length?' has-items':''}" id="mc-${key}" data-key="${key}">${items.length||''}</td>`;
       });
     });
-    h += '</tr>';
+    h+='</tr>';
   });
-  h += '</tbody></table>';
-  document.getElementById('map-table-container').innerHTML = h;
-  document.querySelectorAll('.mcell').forEach(cell => {
-    cell.addEventListener('click', () => {
-      const items = byLoc[cell.dataset.key];
-      if (items && items.length) {
-        document.getElementById('search').value = cell.dataset.key;
-        currentQuery = cell.dataset.key;
-        render();
+  h+='</tbody></table>';
+  document.getElementById('map-table-container').innerHTML=h;
+  document.querySelectorAll('.mcell').forEach(cell=>{
+    cell.addEventListener('click',()=>{
+      const byLocNow={};
+      getData().forEach(d=>{ byLocNow[d.index]=byLocNow[d.index]||[]; byLocNow[d.index].push(d); });
+      if (byLocNow[cell.dataset.key]?.length) {
+        document.getElementById('search').value=cell.dataset.key;
+        currentQuery=cell.dataset.key; render();
       }
     });
   });
 }
+function highlightMap(hits) {
+  document.querySelectorAll('.mcell.lit').forEach(c=>c.classList.remove('lit'));
+  hits.forEach(idx=>{ const el=document.getElementById('mc-'+idx); if(el) el.classList.add('lit'); });
+}
 
-function highlightMap(matchedIndexes) {
-  document.querySelectorAll('.mcell.lit').forEach(c => c.classList.remove('lit'));
-  matchedIndexes.forEach(idx => {
-    const el = document.getElementById('mc-'+idx);
-    if (el) el.classList.add('lit');
+// ── GESTÃO ──
+let mgmtQuery='';
+function renderMgmt() {
+  const DATA=getData(), q=mgmtQuery.trim().toLowerCase();
+  const filtered=DATA.filter(d=>!q||d.nome.toLowerCase().includes(q)||d.index.toLowerCase().includes(q));
+  document.getElementById('mgmt-count').textContent=`${DATA.length} itens no total`;
+  const list=document.getElementById('mgmt-list');
+  if (!filtered.length) { list.innerHTML=`<div class="empty"><div class="icon">📭</div><p>Nenhum item encontrado</p></div>`; return; }
+  const sorted=[...filtered].sort((a,b)=>{
+    const pa=parseIndex(a.index), pb=parseIndex(b.index);
+    if(pa.row!==pb.row) return pa.row<pb.row?-1:1;
+    if(pa.num!==pb.num) return pa.num-pb.num;
+    if(pa.side!==pb.side) return pa.side<pb.side?-1:1;
+    return a.nome.localeCompare(b.nome);
   });
+  list.innerHTML=sorted.map(item=>{
+    const p=parseIndex(item.index), rc=mrowClass(p.row);
+    const isAdded=!!item.added;
+    const newB=isAdded?'<span class="new-badge">novo</span>':'';
+    return `<div class="mgmt-card ${rc}">
+      <div class="mgmt-card-icon">${p.row}${p.num}</div>
+      <div class="mgmt-card-info">
+        <div class="mgmt-card-name">${hl(item.nome,mgmtQuery)}${newB}</div>
+        <div class="mgmt-card-loc">${item.index} · Fila ${p.row} · ${p.sideLabel}</div>
+      </div>
+      <div class="mgmt-actions">
+        ${isAdded?`<button class="icon-btn edit" data-id="${item.id}">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        </button>`:''}
+        <button class="icon-btn del" data-id="${item._id}" data-nome="${item.nome.replace(/"/g,'&quot;')}" data-added="${isAdded}">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        </button>
+      </div>
+    </div>`;
+  }).join('');
+  list.querySelectorAll('.icon-btn.edit').forEach(btn=>btn.addEventListener('click',()=>openEdit(btn.dataset.id)));
+  list.querySelectorAll('.icon-btn.del').forEach(btn=>btn.addEventListener('click',()=>confirmDelete(btn.dataset.id, btn.dataset.nome, btn.dataset.added==='true')));
+}
+document.getElementById('mgmt-search').addEventListener('input',e=>{ mgmtQuery=e.target.value; renderMgmt(); });
+
+// ── FORM ──
+let editingId=null;
+function updatePreview() {
+  const r=document.getElementById('f-row').value, s=document.getElementById('f-side').value, c=document.getElementById('f-col').value;
+  document.getElementById('loc-preview').textContent=`${r}${s}-${c}`;
+}
+['f-row','f-side','f-col'].forEach(id=>document.getElementById(id).addEventListener('change',updatePreview));
+
+function openAdd() {
+  editingId=null;
+  document.getElementById('modal-title').textContent='Adicionar Item';
+  document.getElementById('f-nome').value='';
+  document.getElementById('f-row').value='A';
+  document.getElementById('f-side').value='F';
+  document.getElementById('f-col').value='01';
+  updatePreview();
+  document.getElementById('modal').classList.add('open');
+  setTimeout(()=>document.getElementById('f-nome').focus(),300);
+}
+function openEdit(id) {
+  const item=extraItems.find(i=>i.id===id); if(!item) return;
+  editingId=id;
+  document.getElementById('modal-title').textContent='Editar Item';
+  document.getElementById('f-nome').value=item.nome;
+  const p=parseIndex(item.index);
+  document.getElementById('f-row').value=p.row;
+  document.getElementById('f-side').value=p.side;
+  document.getElementById('f-col').value=String(p.num).padStart(2,'0');
+  updatePreview();
+  document.getElementById('modal').classList.add('open');
+}
+function closeModal() { document.getElementById('modal').classList.remove('open'); editingId=null; }
+document.getElementById('btn-add').addEventListener('click',openAdd);
+document.getElementById('modal-cancel').addEventListener('click',closeModal);
+document.getElementById('modal-save').addEventListener('click',()=>{
+  const nome=document.getElementById('f-nome').value.trim();
+  if (!nome) { toast('⚠️ Introduz o nome do adaptador'); return; }
+  const row=document.getElementById('f-row').value, side=document.getElementById('f-side').value, col=document.getElementById('f-col').value;
+  const index=`${row}${side}-${col}`;
+  if (editingId) {
+    const i=extraItems.findIndex(x=>x.id===editingId);
+    if(i>=0){ extraItems[i].nome=nome; extraItems[i].index=index; }
+    toast('✅ Item atualizado');
+  } else {
+    extraItems.push({id:'e'+Date.now(), nome, index, added:true});
+    toast('✅ Item adicionado');
+  }
+  saveExtra(extraItems); closeModal(); renderMgmt(); render();
+});
+
+// ── DELETE ──
+let pendingId=null, pendingAdded=false;
+function confirmDelete(id,nome,isAdded) {
+  pendingId=id; pendingAdded=isAdded;
+  document.getElementById('confirm-msg').textContent=`"${nome}" será removido da lista.`;
+  document.getElementById('confirm-overlay').classList.add('open');
+}
+document.getElementById('confirm-cancel').addEventListener('click',()=>document.getElementById('confirm-overlay').classList.remove('open'));
+document.getElementById('confirm-ok').addEventListener('click',()=>{
+  document.getElementById('confirm-overlay').classList.remove('open');
+  if (pendingAdded) { extraItems=extraItems.filter(i=>i.id!==pendingId); saveExtra(extraItems); }
+  else { deletedIds.push(pendingId); saveDeleted(deletedIds); }
+  toast('🗑️ Item removido'); renderMgmt(); render();
+});
+
+// ── PIN ──
+const DEFAULT_PIN = '1234';
+function getPin() { return localStorage.getItem('mgmt_pin') || DEFAULT_PIN; }
+function savePin(p) { localStorage.setItem('mgmt_pin', p); }
+
+let pinBuffer = '';
+let pinMode = 'verify'; // 'verify' | 'new1' | 'new2'
+let pinNew1 = '';
+let mgmtUnlocked = false;
+
+function openPinOverlay(mode) {
+  pinMode = mode || 'verify';
+  pinBuffer = ''; pinNew1 = '';
+  document.getElementById('pin-error').textContent = '';
+  document.getElementById('pin-cancel-btn').style.display = mode === 'verify' ? 'block' : 'block';
+  if (mode === 'new1') {
+    document.getElementById('pin-title').textContent = 'Novo PIN';
+    document.getElementById('pin-sub').textContent = 'Escolhe um PIN de 4 dígitos';
+  } else if (mode === 'new2') {
+    document.getElementById('pin-title').textContent = 'Confirmar PIN';
+    document.getElementById('pin-sub').textContent = 'Repete o novo PIN';
+  } else {
+    document.getElementById('pin-title').textContent = 'Acesso à Gestão';
+    document.getElementById('pin-sub').textContent = 'Introduz o PIN de 4 dígitos';
+  }
+  updatePinDots();
+  document.getElementById('pin-overlay').classList.add('open');
+}
+function closePinOverlay() {
+  document.getElementById('pin-overlay').classList.remove('open');
+  pinBuffer = '';
 }
 
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js').catch(() => {});
+function updatePinDots(state) {
+  for (let i = 0; i < 4; i++) {
+    const dot = document.getElementById('pd' + i);
+    dot.classList.remove('filled', 'error');
+    if (state === 'error') dot.classList.add('error');
+    else if (i < pinBuffer.length) dot.classList.add('filled');
+  }
 }
 
-buildMap();
+function pinKey(digit) {
+  if (pinBuffer.length >= 4) return;
+  pinBuffer += digit;
+  updatePinDots();
+  if (pinBuffer.length === 4) setTimeout(checkPin, 120);
+}
+function pinDel() {
+  pinBuffer = pinBuffer.slice(0, -1);
+  updatePinDots();
+  document.getElementById('pin-error').textContent = '';
+}
+
+function checkPin() {
+  if (pinMode === 'verify') {
+    if (pinBuffer === getPin()) {
+      closePinOverlay();
+      mgmtUnlocked = true;
+      // actually switch page
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById('page-mgmt').classList.add('active');
+      document.getElementById('nav-mgmt').classList.add('active');
+      document.getElementById('search-wrap').style.display = 'none';
+      renderMgmt();
+    } else {
+      updatePinDots('error');
+      document.getElementById('pin-error').textContent = 'PIN incorreto. Tenta novamente.';
+      setTimeout(() => { pinBuffer = ''; updatePinDots(); document.getElementById('pin-error').textContent = ''; }, 900);
+    }
+  } else if (pinMode === 'new1') {
+    pinNew1 = pinBuffer;
+    pinBuffer = '';
+    openPinOverlay('new2');
+  } else if (pinMode === 'new2') {
+    if (pinBuffer === pinNew1) {
+      savePin(pinBuffer);
+      closePinOverlay();
+      toast('🔑 PIN alterado com sucesso!');
+    } else {
+      updatePinDots('error');
+      document.getElementById('pin-error').textContent = 'PINs não coincidem. Tenta novamente.';
+      setTimeout(() => { pinBuffer = ''; pinNew1 = ''; openPinOverlay('new1'); }, 900);
+    }
+  }
+}
+
+function startChangePin() { openPinOverlay('new1'); }
+
+// Override switchPage to require PIN for mgmt
+function switchPage(page) {
+  if (page === 'mgmt' && !mgmtUnlocked) {
+    openPinOverlay('verify');
+    return;
+  }
+  if (page === 'search') mgmtUnlocked = false; // lock again when leaving
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  document.getElementById('nav-' + page).classList.add('active');
+  document.getElementById('search-wrap').style.display = page === 'mgmt' ? 'none' : 'block';
+  if (page === 'mgmt') renderMgmt();
+}
+
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
+rebuildMap();
 render();
 </script>
 </body>
